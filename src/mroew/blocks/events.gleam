@@ -1,6 +1,5 @@
-import gleam/option.{None}
 import mroew/blocks.{Block}
 
 pub fn on_flag() {
-  blocks.hat(Block(opcode: "on_flag", inputs: [], fields: []), None)
+  blocks.hat(Block(opcode: "on_flag", inputs: [], fields: []))
 }

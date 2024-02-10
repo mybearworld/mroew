@@ -1,4 +1,4 @@
-import gleam/option.{None, Some}
+import gleam/option.{None}
 import mroew/blocks.{type Operator, Block, Input, boolean}
 
 pub fn repeat_until(condition: Operator) {
@@ -10,6 +10,5 @@ pub fn repeat_until(condition: Operator) {
       ],
       fields: [],
     ),
-    Some("SUBSTACK"),
   )
 }

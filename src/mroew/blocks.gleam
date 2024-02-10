@@ -1,9 +1,8 @@
 import gleam/list
 import gleam/option.{type Option, Some}
 
-pub type Blocks {
-  Blocks(blocks: List(BlockType), substack_name: Option(String))
-}
+pub type Blocks =
+  List(BlockType)
 
 pub type BlockType {
   BTBlock(Block)
@@ -30,12 +29,12 @@ pub type Operator {
   OComplex(Block)
 }
 
-pub fn hat(block: Block, substack_name: Option(String)) -> Blocks {
-  Blocks([BTBlock(block)], substack_name)
+pub fn hat(block: Block) -> Blocks {
+  [BTBlock(block)]
 }
 
 pub fn stack(block: Block, blocks: Blocks) -> Blocks {
-  Blocks(..blocks, blocks: list.append(blocks.blocks, [BTBlock(block)]))
+  list.append(blocks, [BTBlock(block)])
 }
 
 pub fn boolean(operator: Operator) {
@@ -61,7 +60,5 @@ pub fn boolean(operator: Operator) {
 }
 
 pub fn c(blocks: Blocks) {
-  fn(cblocks: Blocks) {
-    Blocks(..cblocks, blocks: list.append(cblocks.blocks, [BTBlocks(blocks)]))
-  }
+  fn(cblocks: Blocks) { list.append(cblocks, [BTBlocks(blocks)]) }
 }
