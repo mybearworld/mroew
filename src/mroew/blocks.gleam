@@ -1,5 +1,5 @@
 import gleam/list
-import gleam/option.{type Option, Some}
+import gleam/option.{type Option, None, Some}
 
 pub type Blocks =
   List(BlockType)
@@ -27,6 +27,19 @@ pub type Operator {
   OString(String)
   OBool(Bool)
   OComplex(Block)
+}
+
+pub fn to_complex(operator: Operator) {
+  case operator {
+    OComplex(_) -> operator
+    other ->
+      OComplex(
+        Block(opcode: "operator_join", fields: [], inputs: [
+          Input(name: "STRING1", default: Some(OString("apple")), value: other),
+          Input(name: "STRING2", default: None, value: OString("")),
+        ]),
+      )
+  }
 }
 
 pub fn hat(block: Block) -> Blocks {
