@@ -7,7 +7,7 @@ import mroew/blocks/ops
 pub fn main() {
   io.debug(
     events.on_flag()
-    |> motion.go(
+    |> motion.go_sprite(
       true
       |> ops.and(true),
     ),
