@@ -33,7 +33,7 @@ pub fn hat(block: Block) -> Blocks {
   [BTBlock(block)]
 }
 
-pub fn stack(blocks: Blocks, block: Block) -> Blocks {
+pub fn stack(block: Block, blocks: Blocks) -> Blocks {
   list.append(blocks, [BTBlock(block)])
 }
 
