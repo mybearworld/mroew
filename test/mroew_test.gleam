@@ -1,5 +1,6 @@
 import gleam/io
-import mroew/blocks.{OInt}
+import mroew/blocks.{OBool, OInt, c}
+import mroew/blocks/control
 import mroew/blocks/events
 import mroew/blocks/looks
 import mroew/blocks/ops
@@ -12,6 +13,9 @@ pub fn main() {
       OInt(1)
       |> ops.and(OInt(2)),
     )
-    |> sensing.set_draggable("draggable"),
+    |> c(
+      control.repeat_until(OBool(False))
+      |> sensing.set_draggable("draggable"),
+    ),
   )
 }

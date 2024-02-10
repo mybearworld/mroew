@@ -2,7 +2,12 @@ import gleam/list
 import gleam/option.{type Option, Some}
 
 pub type Blocks =
-  List(Block)
+  List(BlockType)
+
+pub type BlockType {
+  BTBlock(Block)
+  BTBlocks(Blocks)
+}
 
 pub type Block {
   Block(opcode: String, inputs: List(Input), fields: List(Field))
@@ -24,12 +29,12 @@ pub type Operator {
   OComplex(Block)
 }
 
-pub fn hat(opcode: String) -> Blocks {
-  [Block(opcode: opcode, inputs: [], fields: [])]
+pub fn hat(block: Block) -> Blocks {
+  [BTBlock(block)]
 }
 
 pub fn stack(blocks: Blocks, block: Block) -> Blocks {
-  list.append(blocks, [block])
+  list.append(blocks, [BTBlock(block)])
 }
 
 pub fn boolean(operator: Operator) {
@@ -52,4 +57,8 @@ pub fn boolean(operator: Operator) {
     OBool(_) -> operator
     _ -> equals
   }
+}
+
+pub fn c(blocks: Blocks) {
+  fn(cblocks: Blocks) { list.append(cblocks, [BTBlocks(blocks)]) }
 }
