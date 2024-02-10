@@ -1,5 +1,5 @@
 import gleam/io
-import mroew/blocks.{true}
+import mroew/blocks.{OString, true}
 import mroew/blocks/events
 import mroew/blocks/motion
 import mroew/blocks/ops
@@ -10,6 +10,7 @@ pub fn main() {
     |> motion.go_sprite(
       true
       |> ops.and(true),
-    ),
+    )
+    |> events.broadcast(OString("message")),
   )
 }
