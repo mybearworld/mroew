@@ -1,5 +1,6 @@
 import gleam/io
-import mroew/blocks.{OString, true}
+import mroew/blocks.{OString, c, true}
+import mroew/blocks/control
 import mroew/blocks/events
 import mroew/blocks/motion
 import mroew/blocks/ops
@@ -11,6 +12,9 @@ pub fn main() {
       true
       |> ops.and(true),
     )
-    |> events.broadcast(OString("message")),
+    |> c(
+      control.cond(true)
+      |> events.broadcast(OString("message")),
+    ),
   )
 }
