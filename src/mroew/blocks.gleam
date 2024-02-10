@@ -11,6 +11,6 @@ pub fn hat(opcode: String) -> Blocks {
   [Block(opcode: opcode)]
 }
 
-pub fn stack(opcode: String) -> fn(Blocks) -> Blocks {
-  fn(blocks: Blocks) { list.append(blocks, [Block(opcode: opcode)]) }
+pub fn stack(blocks: Blocks, block: Block) -> Blocks {
+  list.append(blocks, [block])
 }

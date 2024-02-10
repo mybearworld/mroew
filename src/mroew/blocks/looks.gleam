@@ -1,5 +1,5 @@
-import mroew/blocks
+import mroew/blocks.{type Blocks, Block}
 
-pub fn show() {
-  blocks.stack("show")
+pub fn show(cblocks: Blocks) {
+  blocks.stack(cblocks, Block(opcode: "show"))
 }
