@@ -25,9 +25,12 @@ pub type Operator {
   OInt(Int)
   OFloat(Float)
   OString(String)
-  OBool(Bool)
   OComplex(Block)
 }
+
+pub const true = OComplex(Block(opcode: "operator_not", inputs: [], fields: []))
+
+pub const false = OComplex(Block(opcode: "operator_or", inputs: [], fields: []))
 
 pub fn to_complex(operator: Operator) {
   case operator {
@@ -51,25 +54,16 @@ pub fn stack(block: Block, blocks: Blocks) -> Blocks {
 }
 
 pub fn boolean(operator: Operator) {
-  let equals =
-    OComplex(
-      Block(
-        opcode: "operator_equals",
-        inputs: [
-          Input(name: "OPERAND1", default: Some(OInt(0)), value: operator),
-          Input(
-            name: "OPERAND2",
-            default: Some(OInt(0)),
-            value: OString("true"),
-          ),
-        ],
-        fields: [],
-      ),
-    )
-  case operator {
-    OBool(_) -> operator
-    _ -> equals
-  }
+  OComplex(
+    Block(
+      opcode: "operator_equals",
+      inputs: [
+        Input(name: "OPERAND1", default: Some(OInt(0)), value: operator),
+        Input(name: "OPERAND2", default: Some(OInt(0)), value: OString("true")),
+      ],
+      fields: [],
+    ),
+  )
 }
 
 pub fn c(blocks: Blocks) {
