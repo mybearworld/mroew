@@ -95,45 +95,37 @@ pub fn replace_list(
 }
 
 pub fn index_list(list: String, index: Operator) {
-  OComplex(
-    Block(
-      opcode: "data_itemoflist",
-      inputs: [Input(name: "INDEX", default: Some(OInt(1)), value: index)],
-      fields: [Field(name: "LIST", value: list, subvalue: None)],
-    ),
+  Block(
+    opcode: "data_itemoflist",
+    inputs: [Input(name: "INDEX", default: Some(OInt(1)), value: index)],
+    fields: [Field(name: "LIST", value: list, subvalue: None)],
   )
+  |> OComplex
 }
 
 pub fn index_of_item_list(list: String, item: Operator) {
-  OComplex(
-    Block(
-      opcode: "data_itemoflist",
-      inputs: [
-        Input(name: "ITEM", default: Some(OString("thing")), value: item),
-      ],
-      fields: [Field(name: "LIST", value: list, subvalue: None)],
-    ),
+  Block(
+    opcode: "data_itemoflist",
+    inputs: [Input(name: "ITEM", default: Some(OString("thing")), value: item)],
+    fields: [Field(name: "LIST", value: list, subvalue: None)],
   )
+  |> OComplex
 }
 
 pub fn len_list(list: String) {
-  OComplex(
-    Block(opcode: "data_lengthoflist", inputs: [], fields: [
-      Field(name: "LIST", value: list, subvalue: None),
-    ]),
-  )
+  Block(opcode: "data_lengthoflist", inputs: [], fields: [
+    Field(name: "LIST", value: list, subvalue: None),
+  ])
+  |> OComplex
 }
 
 pub fn contains_list(list: String, item: Operator) {
-  OComplex(
-    Block(
-      opcode: "data_listcontainsitem",
-      inputs: [
-        Input(name: "ITEM", default: Some(OString("thing")), value: item),
-      ],
-      fields: [Field(name: "LIST", value: list, subvalue: None)],
-    ),
+  Block(
+    opcode: "data_listcontainsitem",
+    inputs: [Input(name: "ITEM", default: Some(OString("thing")), value: item)],
+    fields: [Field(name: "LIST", value: list, subvalue: None)],
   )
+  |> OComplex
 }
 
 pub fn show_list(cblocks: Blocks, list: String) {

@@ -33,20 +33,18 @@ pub fn touching_edge(cblocks: Blocks) {
 }
 
 pub fn touching_color(color: Operator) {
-  OComplex(
-    Block(opcode: "sensing_touchingcolor", fields: [], inputs: [
-      Input(name: "COLOR", default: Some(OString("#666666")), value: color),
-    ]),
-  )
+  Block(opcode: "sensing_touchingcolor", fields: [], inputs: [
+    Input(name: "COLOR", default: Some(OString("#666666")), value: color),
+  ])
+  |> OComplex
 }
 
 pub fn color_touching_color(color: Operator, color2: Operator) {
-  OComplex(
-    Block(opcode: "sensing_touchingcolor", fields: [], inputs: [
-      Input(name: "COLOR1", default: Some(OString("#666666")), value: color),
-      Input(name: "COLOR2", default: Some(OString("#666666")), value: color2),
-    ]),
-  )
+  Block(opcode: "sensing_touchingcolor", fields: [], inputs: [
+    Input(name: "COLOR1", default: Some(OString("#666666")), value: color),
+    Input(name: "COLOR2", default: Some(OString("#666666")), value: color2),
+  ])
+  |> OComplex
 }
 
 pub fn distance_sprite(cblocks: Blocks, sprite: Operator) {
@@ -115,15 +113,18 @@ pub fn key(cblocks: Blocks, key: Operator) {
 }
 
 pub fn mouse_down() {
-  OComplex(Block(opcode: "sensing_mousedown", fields: [], inputs: []))
+  Block(opcode: "sensing_mousedown", fields: [], inputs: [])
+  |> OComplex
 }
 
 pub fn mouse_x() {
-  OComplex(Block(opcode: "sensing_mousex", fields: [], inputs: []))
+  Block(opcode: "sensing_mousex", fields: [], inputs: [])
+  |> OComplex
 }
 
 pub fn mouse_y() {
-  OComplex(Block(opcode: "sensing_mousey", fields: [], inputs: []))
+  Block(opcode: "sensing_mousey", fields: [], inputs: [])
+  |> OComplex
 }
 
 pub fn set_draggable(cblocks: Blocks, draggability: Bool) {
@@ -141,11 +142,13 @@ pub fn set_draggable(cblocks: Blocks, draggability: Bool) {
 }
 
 pub fn loduness() {
-  OComplex(Block(opcode: "sensing_loudness", fields: [], inputs: []))
+  Block(opcode: "sensing_loudness", fields: [], inputs: [])
+  |> OComplex
 }
 
 pub fn timer() {
-  OComplex(Block(opcode: "sensing_timer", fields: [], inputs: []))
+  Block(opcode: "sensing_timer", fields: [], inputs: [])
+  |> OComplex
 }
 
 pub fn reset_timer(cblocks: Blocks) {
@@ -198,33 +201,31 @@ fn stage_property_to_string(stage_property: StageProperty) {
 }
 
 fn base_property(property: String, sprite: Operator) {
-  OComplex(
-    Block(
-      opcode: "sensing_of",
-      inputs: [
-        Input(
-          name: "OBJECT",
-          default: Some(
-            OComplex(
-              Block(opcode: "sensing_of_object_menu", inputs: [], fields: [
-                Field(name: "OBJECT", value: "_stage_", subvalue: None),
-              ]),
-            ),
+  Block(
+    opcode: "sensing_of",
+    inputs: [
+      Input(
+        name: "OBJECT",
+        default: Some(
+          OComplex(
+            Block(opcode: "sensing_of_object_menu", inputs: [], fields: [
+              Field(name: "OBJECT", value: "_stage_", subvalue: None),
+            ]),
           ),
-          value: sprite,
         ),
-      ],
-      fields: [Field(name: "PROPERTY", value: property, subvalue: None)],
-    ),
+        value: sprite,
+      ),
+    ],
+    fields: [Field(name: "PROPERTY", value: property, subvalue: None)],
   )
+  |> OComplex
 }
 
 pub fn current(time: Time) {
-  OComplex(
-    Block(opcode: "sensing_current", inputs: [], fields: [
-      Field(name: "CURRENTMENU", value: time_to_string(time), subvalue: None),
-    ]),
-  )
+  Block(opcode: "sensing_current", inputs: [], fields: [
+    Field(name: "CURRENTMENU", value: time_to_string(time), subvalue: None),
+  ])
+  |> OComplex
 }
 
 pub type Time {
@@ -250,9 +251,11 @@ fn time_to_string(time: Time) {
 }
 
 pub fn days_since_2000() {
-  OComplex(Block(opcode: "sensing_dayssince2000", fields: [], inputs: []))
+  Block(opcode: "sensing_dayssince2000", fields: [], inputs: [])
+  |> OComplex
 }
 
 pub fn username() {
-  OComplex(Block(opcode: "sensing_username", fields: [], inputs: []))
+  Block(opcode: "sensing_username", fields: [], inputs: [])
+  |> OComplex
 }

@@ -224,37 +224,34 @@ fn front_back_to_fw_string(front_back: FrontBack) {
 }
 
 pub fn costume_number() {
-  OComplex(
-    Block(opcode: "looks_costumenumbername", inputs: [], fields: [
-      Field(name: "NUMBER_NAME", value: "number", subvalue: None),
-    ]),
-  )
+  Block(opcode: "looks_costumenumbername", inputs: [], fields: [
+    Field(name: "NUMBER_NAME", value: "number", subvalue: None),
+  ])
+  |> OComplex
 }
 
 pub fn costume_name() {
-  OComplex(
-    Block(opcode: "looks_costumenumbername", inputs: [], fields: [
-      Field(name: "NUMBER_NAME", value: "name", subvalue: None),
-    ]),
-  )
+  Block(opcode: "looks_costumenumbername", inputs: [], fields: [
+    Field(name: "NUMBER_NAME", value: "name", subvalue: None),
+  ])
+  |> OComplex
 }
 
 pub fn backdrop_number() {
-  OComplex(
-    Block(opcode: "looks_backdropnumbername", inputs: [], fields: [
-      Field(name: "NUMBER_NAME", value: "number", subvalue: None),
-    ]),
-  )
+  Block(opcode: "looks_backdropnumbername", inputs: [], fields: [
+    Field(name: "NUMBER_NAME", value: "number", subvalue: None),
+  ])
+  |> OComplex
 }
 
 pub fn backdrop_name() {
-  OComplex(
-    Block(opcode: "looks_backdropnumbername", inputs: [], fields: [
-      Field(name: "NUMBER_NAME", value: "name", subvalue: None),
-    ]),
-  )
+  Block(opcode: "looks_backdropnumbername", inputs: [], fields: [
+    Field(name: "NUMBER_NAME", value: "name", subvalue: None),
+  ])
+  |> OComplex
 }
 
 pub fn size() {
-  OComplex(Block(opcode: "looks_size", inputs: [], fields: []))
+  Block(opcode: "looks_size", inputs: [], fields: [])
+  |> OComplex
 }

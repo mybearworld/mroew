@@ -4,61 +4,54 @@ import mroew/blocks.{
 }
 
 pub fn on_flag() {
-  blocks.hat(Block(opcode: "event_whenflagclicked", inputs: [], fields: []))
+  Block(opcode: "event_whenflagclicked", inputs: [], fields: [])
+  |> blocks.hat
 }
 
 pub fn on_key(key: String) {
-  blocks.hat(
-    Block(opcode: "event_whenkeypressed", inputs: [], fields: [
-      Field(name: "KEY_OPTION", value: key, subvalue: None),
-    ]),
-  )
+  Block(opcode: "event_whenkeypressed", inputs: [], fields: [
+    Field(name: "KEY_OPTION", value: key, subvalue: None),
+  ])
+  |> blocks.hat
 }
 
 pub fn on_sprite_click() {
-  blocks.hat(
-    Block(opcode: "event_whenthisspriteclicked", inputs: [], fields: []),
-  )
+  Block(opcode: "event_whenthisspriteclicked", inputs: [], fields: [])
+  |> blocks.hat
 }
 
 pub fn on_backdrop(backdrop: String) {
-  blocks.hat(
-    Block(opcode: "event_whenbackdropswitchesto", inputs: [], fields: [
-      Field(name: "BACKDROP", value: backdrop, subvalue: None),
-    ]),
-  )
+  Block(opcode: "event_whenbackdropswitchesto", inputs: [], fields: [
+    Field(name: "BACKDROP", value: backdrop, subvalue: None),
+  ])
+  |> blocks.hat
 }
 
 pub fn on_timer(time: Operator) {
-  blocks.hat(
-    Block(
-      opcode: "event_whengreaterthan",
-      inputs: [Input(name: "VALUE", default: Some(OInt(10)), value: time)],
-      fields: [
-        Field(name: "WHENGREATERTHANMENU", value: "TIMER", subvalue: None),
-      ],
-    ),
+  Block(
+    opcode: "event_whengreaterthan",
+    inputs: [Input(name: "VALUE", default: Some(OInt(10)), value: time)],
+    fields: [Field(name: "WHENGREATERTHANMENU", value: "TIMER", subvalue: None)],
   )
+  |> blocks.hat
 }
 
 pub fn on_loudness(loudness: Operator) {
-  blocks.hat(
-    Block(
-      opcode: "event_whengreaterthan",
-      inputs: [Input(name: "VALUE", default: Some(OInt(10)), value: loudness)],
-      fields: [
-        Field(name: "WHENGREATERTHANMENU", value: "LOUDNESS", subvalue: None),
-      ],
-    ),
+  Block(
+    opcode: "event_whengreaterthan",
+    inputs: [Input(name: "VALUE", default: Some(OInt(10)), value: loudness)],
+    fields: [
+      Field(name: "WHENGREATERTHANMENU", value: "LOUDNESS", subvalue: None),
+    ],
   )
+  |> blocks.hat
 }
 
 pub fn on_message(message: String) {
-  blocks.hat(
-    Block(opcode: "event_whengreaterthan", inputs: [], fields: [
-      Field(name: "BROADCAST_OPTION", value: message, subvalue: None),
-    ]),
-  )
+  Block(opcode: "event_whengreaterthan", inputs: [], fields: [
+    Field(name: "BROADCAST_OPTION", value: message, subvalue: None),
+  ])
+  |> blocks.hat
 }
 
 pub fn broadcast(cblocks: Blocks, message: Operator) {

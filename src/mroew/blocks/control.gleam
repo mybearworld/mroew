@@ -14,29 +14,26 @@ pub fn wait(cblocks: Blocks, seconds: Operator) {
 }
 
 pub fn repeat(times: Operator) {
-  blocks.hat(
-    Block(
-      opcode: "control_repeat",
-      inputs: [Input(name: "TIMES", default: Some(OInt(10)), value: times)],
-      fields: [],
-    ),
+  Block(
+    opcode: "control_repeat",
+    inputs: [Input(name: "TIMES", default: Some(OInt(10)), value: times)],
+    fields: [],
   )
+  |> blocks.hat
 }
 
 pub fn forever() {
-  blocks.hat(Block(opcode: "control_forever", inputs: [], fields: []))
+  Block(opcode: "control_forever", inputs: [], fields: [])
+  |> blocks.hat
 }
 
 pub fn cond(condition: Operator) {
-  blocks.hat(
-    Block(
-      opcode: "control_if",
-      inputs: [
-        Input(name: "CONDITION", default: None, value: boolean(condition)),
-      ],
-      fields: [],
-    ),
+  Block(
+    opcode: "control_if",
+    inputs: [Input(name: "CONDITION", default: None, value: boolean(condition))],
+    fields: [],
   )
+  |> blocks.hat
 }
 
 pub fn wait_until(cblocks: Blocks, condition: Operator) {
@@ -47,11 +44,10 @@ pub fn wait_until(cblocks: Blocks, condition: Operator) {
 }
 
 pub fn repeat_until(condition: Operator) {
-  blocks.hat(
-    Block(opcode: "control_repeat_until", fields: [], inputs: [
-      Input(name: "CONDITION", default: None, value: boolean(condition)),
-    ]),
-  )
+  Block(opcode: "control_repeat_until", fields: [], inputs: [
+    Input(name: "CONDITION", default: None, value: boolean(condition)),
+  ])
+  |> blocks.hat
 }
 
 pub fn stop(cblocks: Blocks, stop_action: StopAction) {
@@ -110,5 +106,6 @@ pub fn delete_clone(cblocks: Blocks) {
 }
 
 pub fn on_clone() {
-  blocks.hat(Block(opcode: "control_start_as_clone", inputs: [], fields: []))
+  Block(opcode: "control_start_as_clone", inputs: [], fields: [])
+  |> blocks.hat
 }

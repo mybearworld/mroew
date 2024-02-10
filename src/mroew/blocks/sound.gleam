@@ -35,11 +35,10 @@ pub fn play(cblocks: Blocks, sound: Operator) {
 
 fn sound_menu() {
   Some(
-    OComplex(
-      Block(opcode: "sound_sounds_menu", inputs: [], fields: [
-        Field(name: "SOUND_MENU", value: "Meow", subvalue: None),
-      ]),
-    ),
+    Block(opcode: "sound_sounds_menu", inputs: [], fields: [
+      Field(name: "SOUND_MENU", value: "Meow", subvalue: None),
+    ])
+    |> OComplex,
   )
 }
 
@@ -114,5 +113,5 @@ pub fn set_volume(cblocks: Blocks, volume: Operator) {
 }
 
 pub fn volume() {
-  OComplex(Block(opcode: "sound_volume", inputs: [], fields: []))
+  Block(opcode: "sound_volume", inputs: [], fields: [])  |> OComplex
 }

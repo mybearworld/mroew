@@ -196,13 +196,16 @@ fn rotation_style_to_string(style: RotationStyle) {
 }
 
 pub fn x() {
-  OComplex(Block(opcode: "motion_xposition", inputs: [], fields: []))
+  Block(opcode: "motion_xposition", inputs: [], fields: [])
+  |> OComplex
 }
 
 pub fn y() {
-  OComplex(Block(opcode: "motion_yposition", inputs: [], fields: []))
+  Block(opcode: "motion_yposition", inputs: [], fields: [])
+  |> OComplex
 }
 
 pub fn direction() {
-  OComplex(Block(opcode: "motion_direction", inputs: [], fields: []))
+  Block(opcode: "motion_direction", inputs: [], fields: [])
+  |> OComplex
 }

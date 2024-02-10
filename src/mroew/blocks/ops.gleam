@@ -94,13 +94,12 @@ pub fn or(operator: Operator, operator2: Operator) {
 }
 
 pub fn not(operator: Operator) {
-  OComplex(
-    Block(
-      opcode: "operator_not",
-      inputs: [Input(name: "OPERAND", default: None, value: operator)],
-      fields: [],
-    ),
+  Block(
+    opcode: "operator_not",
+    inputs: [Input(name: "OPERAND", default: None, value: operator)],
+    fields: [],
   )
+  |> OComplex
 }
 
 pub fn join(operator: Operator, operator2: Operator) {
@@ -122,15 +121,14 @@ pub fn letter_of(string: Operator, index: Operator) {
 }
 
 pub fn len(operator: Operator) {
-  OComplex(
-    Block(
-      opcode: "operator_length",
-      inputs: [
-        Input(name: "STRING", default: Some(OString("apple")), value: operator),
-      ],
-      fields: [],
-    ),
+  Block(
+    opcode: "operator_length",
+    inputs: [
+      Input(name: "STRING", default: Some(OString("apple")), value: operator),
+    ],
+    fields: [],
   )
+  |> OComplex
 }
 
 pub fn contains(haystack: Operator, needle: Operator) {
@@ -152,36 +150,27 @@ pub fn mod(operator: Operator, operator2: Operator) {
 }
 
 pub fn round(operator: Operator) {
-  OComplex(
-    Block(
-      opcode: "operator_round",
-      inputs: [Input(name: "NUM", default: Some(OFloat(7.6)), value: operator)],
-      fields: [],
-    ),
+  Block(
+    opcode: "operator_round",
+    inputs: [Input(name: "NUM", default: Some(OFloat(7.6)), value: operator)],
+    fields: [],
   )
+  |> OComplex
 }
 
 pub fn operation(operator: Operator, operation: Operation) {
-  OComplex(
-    Block(
-      opcode: "operator_mathop",
-      inputs: [Input(name: "NUM", default: Some(OInt(1)), value: operator)],
-      fields: [
-        Field(
-          name: "OPERATOR",
-          value: operation_to_string(operation),
-          subvalue: None,
-        ),
-      ],
-    ),
+  Block(
+    opcode: "operator_mathop",
+    inputs: [Input(name: "NUM", default: Some(OInt(1)), value: operator)],
+    fields: [
+      Field(
+        name: "OPERATOR",
+        value: operation_to_string(operation),
+        subvalue: None,
+      ),
+    ],
   )
-
-  binary(
-    operator,
-    OString(operation_to_string(operation)),
-    "operator_mathop",
-    #(#("NUM1", None), #("NUM2", None)),
-  )
+  |> OComplex
 }
 
 pub type Operation {
@@ -226,22 +215,21 @@ fn binary(
   opcode: String,
   templates: #(#(String, Option(Operator)), #(String, Option(Operator))),
 ) {
-  OComplex(
-    Block(
-      opcode: opcode,
-      inputs: [
-        Input(
-          name: { templates.0 }.0,
-          default: { templates.0 }.1,
-          value: operator,
-        ),
-        Input(
-          name: { templates.1 }.0,
-          default: { templates.1 }.1,
-          value: operator2,
-        ),
-      ],
-      fields: [],
-    ),
+  Block(
+    opcode: opcode,
+    inputs: [
+      Input(
+        name: { templates.0 }.0,
+        default: { templates.0 }.1,
+        value: operator,
+      ),
+      Input(
+        name: { templates.1 }.0,
+        default: { templates.1 }.1,
+        value: operator2,
+      ),
+    ],
+    fields: [],
   )
+  |> OComplex
 }
