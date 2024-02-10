@@ -1,6 +1,6 @@
 import gleam/option.{None, Some}
 import mroew/blocks.{
-  type Blocks, type Operator, Block, Field, Input, OInt, OString,
+  type Blocks, type Operator, Block, Field, Input, OComplex, OInt, OString,
 }
 
 pub fn set_var(cblocks: Blocks, var: String, value: Operator) {
@@ -47,7 +47,7 @@ pub fn push_list(cblocks: Blocks, list: String, value: Operator) {
 pub fn pop_list(cblocks: Blocks, list: String, index: Operator) {
   Block(
     opcode: "data_deleteoflist",
-    inputs: [Input(name: "INDEX", default: Some(OInt(1)), value: index + 1)],
+    inputs: [Input(name: "INDEX", default: Some(OInt(1)), value: index)],
     fields: [Field(name: "LIST", value: list, subvalue: None)],
   )
   |> blocks.stack(cblocks)
@@ -69,7 +69,7 @@ pub fn insert_list(
   Block(
     opcode: "data_insertatlist",
     inputs: [
-      Input(name: "INDEX", default: Some(OInt(1)), value: index + 1),
+      Input(name: "INDEX", default: Some(OInt(1)), value: index),
       Input(name: "ITEM", default: Some(OString("thing")), value: item),
     ],
     fields: [Field(name: "LIST", value: list, subvalue: None)],
@@ -86,7 +86,7 @@ pub fn replace_list(
   Block(
     opcode: "data_replaceitemoflist",
     inputs: [
-      Input(name: "INDEX", default: Some(OInt(1)), value: index + 1),
+      Input(name: "INDEX", default: Some(OInt(1)), value: index),
       Input(name: "ITEM", default: Some(OString("thing")), value: item),
     ],
     fields: [Field(name: "LIST", value: list, subvalue: None)],
@@ -98,7 +98,7 @@ pub fn index_list(list: String, index: Operator) {
   OComplex(
     Block(
       opcode: "data_itemoflist",
-      inputs: [Input(name: "INDEX", default: Some(OInt(1)), value: index + 1)],
+      inputs: [Input(name: "INDEX", default: Some(OInt(1)), value: index)],
       fields: [Field(name: "LIST", value: list, subvalue: None)],
     ),
   )
@@ -118,7 +118,7 @@ pub fn index_of_item_list(list: String, item: Operator) {
 
 pub fn len_list(list: String) {
   OComplex(
-    Block(opcode: "data_lengthoflist", fields: [
+    Block(opcode: "data_lengthoflist", inputs: [], fields: [
       Field(name: "LIST", value: list, subvalue: None),
     ]),
   )
@@ -137,14 +137,14 @@ pub fn contains_list(list: String, item: Operator) {
 }
 
 pub fn show_list(cblocks: Blocks, list: String) {
-  Block(opcode: "data_showlist", fields: [
+  Block(opcode: "data_showlist", inputs: [], fields: [
     Field(name: "LIST", value: list, subvalue: None),
   ])
   |> blocks.stack(cblocks)
 }
 
-pub fn hide_list(list: String) {
-  Block(opcode: "data_hidelist", fields: [
+pub fn hide_list(cblocks: Blocks, list: String) {
+  Block(opcode: "data_hidelist", inputs: [], fields: [
     Field(name: "LIST", value: list, subvalue: None),
   ])
   |> blocks.stack(cblocks)
