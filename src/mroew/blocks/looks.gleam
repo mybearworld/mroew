@@ -1,12 +1,12 @@
 import mroew/blocks.{type Blocks, type Operator, Block, OInt}
 
 pub fn show(cblocks: Blocks) {
-  blocks.stack(cblocks, Block(opcode: "show", inputs: []))
+  blocks.stack(cblocks, Block(opcode: "show", inputs: [], fields: []))
 }
 
 pub fn set_size(cblocks: Blocks, size: Operator) {
   blocks.stack(
     cblocks,
-    Block(opcode: "set_size", inputs: [#("SIZE", OInt(100), size)]),
+    Block(opcode: "set_size", inputs: [#("SIZE", OInt(100), size)], fields: []),
   )
 }
