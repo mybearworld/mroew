@@ -4,13 +4,14 @@ pub type Blocks =
   List(Block)
 
 pub type Block {
-  Block(opcode: String, inputs: List(#(String, Operator)))
+  Block(opcode: String, inputs: List(#(String, Operator, Operator)))
 }
 
 pub type Operator {
   OInt(Int)
   OFloat(Float)
   OString(String)
+  OComplex(Block)
 }
 
 pub fn hat(opcode: String) -> Blocks {
