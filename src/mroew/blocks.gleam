@@ -5,11 +5,15 @@ pub type Blocks =
   List(Block)
 
 pub type Block {
-  Block(
-    opcode: String,
-    inputs: List(#(String, Operator, Operator)),
-    fields: List(#(String, String, Option(String))),
-  )
+  Block(opcode: String, inputs: List(Input), fields: List(Field))
+}
+
+pub type Input {
+  Input(name: String, default: Operator, value: Operator)
+}
+
+pub type Field {
+  Field(name: String, value: String, subvalue: Option(String))
 }
 
 pub type Operator {

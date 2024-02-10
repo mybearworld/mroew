@@ -1,10 +1,13 @@
-import mroew/blocks.{type Operator, Block, OComplex, OInt}
+import mroew/blocks.{type Operator, Block, Input, OComplex, OInt}
 
 pub fn add(operator: Operator, operator2: Operator) {
   OComplex(
     Block(
       opcode: "add",
-      inputs: [#("NUM_1", OInt(2), operator), #("NUM_2", OInt(2), operator2)],
+      inputs: [
+        Input(name: "NUM_1", default: OInt(2), value: operator),
+        Input(name: "NUM_2", default: OInt(2), value: operator2),
+      ],
       fields: [],
     ),
   )
