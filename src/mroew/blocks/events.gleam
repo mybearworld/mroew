@@ -7,7 +7,6 @@ pub fn on_flag() {
   blocks.hat(Block(opcode: "event_whenflagclicked", inputs: [], fields: []))
 }
 
-/// Todo use a key enum
 pub fn on_key(key: String) {
   blocks.hat(
     Block(opcode: "event_whenkeypressed", inputs: [], fields: [
