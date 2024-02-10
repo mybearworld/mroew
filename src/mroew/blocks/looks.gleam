@@ -1,5 +1,3 @@
-//// TODO: Costume blocks
-
 import gleam/option.{None, Some}
 import mroew/blocks.{
   type Blocks, type Operator, Block, Field, Input, OComplex, OInt, OString,
@@ -51,8 +49,50 @@ pub fn think(cblocks: Blocks, content: Operator) {
   |> blocks.stack(cblocks)
 }
 
+pub fn switch_costume(cblocks: Blocks, costume: Operator) {
+  Block(
+    opcode: "looks_switchcostumeto",
+    inputs: [
+      Input(
+        name: "COSTUME",
+        default: Some(
+          OComplex(
+            Block(opcode: "looks_costume", inputs: [], fields: [
+              Field(name: "COSTUME", value: "[costume name]", subvalue: None),
+            ]),
+          ),
+        ),
+        value: blocks.to_complex(costume),
+      ),
+    ],
+    fields: [],
+  )
+  |> blocks.stack(cblocks)
+}
+
 pub fn next_costume(cblocks: Blocks) {
   Block(opcode: "looks_nextcostume", inputs: [], fields: [])
+  |> blocks.stack(cblocks)
+}
+
+pub fn switch_backdrop(cblocks: Blocks, costume: Operator) {
+  Block(
+    opcode: "looks_switchbackdropto",
+    inputs: [
+      Input(
+        name: "BACKDROP",
+        default: Some(
+          OComplex(
+            Block(opcode: "looks_backdrops", inputs: [], fields: [
+              Field(name: "BACKDROP", value: "[backdrop name]", subvalue: None),
+            ]),
+          ),
+        ),
+        value: blocks.to_complex(costume),
+      ),
+    ],
+    fields: [],
+  )
   |> blocks.stack(cblocks)
 }
 
