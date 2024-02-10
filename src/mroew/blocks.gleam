@@ -1,5 +1,5 @@
 import gleam/list
-import gleam/option.{type Option}
+import gleam/option.{type Option, Some}
 
 pub type Blocks =
   List(Block)
@@ -9,7 +9,7 @@ pub type Block {
 }
 
 pub type Input {
-  Input(name: String, default: Operator, value: Operator)
+  Input(name: String, default: Option(Operator), value: Operator)
 }
 
 pub type Field {
@@ -20,6 +20,7 @@ pub type Operator {
   OInt(Int)
   OFloat(Float)
   OString(String)
+  OBool(Bool)
   OComplex(Block)
 }
 
@@ -29,4 +30,26 @@ pub fn hat(opcode: String) -> Blocks {
 
 pub fn stack(blocks: Blocks, block: Block) -> Blocks {
   list.append(blocks, [block])
+}
+
+pub fn boolean(operator: Operator) {
+  let equals =
+    OComplex(
+      Block(
+        opcode: "operator_equals",
+        inputs: [
+          Input(name: "OPERAND1", default: Some(OInt(0)), value: operator),
+          Input(
+            name: "OPERAND2",
+            default: Some(OInt(0)),
+            value: OString("true"),
+          ),
+        ],
+        fields: [],
+      ),
+    )
+  case operator {
+    OBool(_) -> operator
+    _ -> equals
+  }
 }

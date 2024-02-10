@@ -1,5 +1,5 @@
 import gleam/io
-import mroew/blocks.{OFloat, OInt}
+import mroew/blocks.{OInt}
 import mroew/blocks/events
 import mroew/blocks/looks
 import mroew/blocks/ops
@@ -10,9 +10,7 @@ pub fn main() {
     events.on_flag()
     |> looks.set_size(
       OInt(1)
-      |> ops.add(OInt(5))
-      |> ops.add(OInt(-2))
-      |> ops.add(OFloat(2.23)),
+      |> ops.and(OInt(2)),
     )
     |> sensing.set_draggable("draggable"),
   )
