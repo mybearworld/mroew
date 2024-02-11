@@ -1,20 +1,15 @@
 import gleam/io
-import mroew/blocks.{OString, c, true}
-import mroew/blocks/control
+import mroew/blocks.{OString}
+import mroew/blocks/looks
 import mroew/blocks/events
-import mroew/blocks/motion
-import mroew/blocks/ops
+import mroew/sprite
 
 pub fn main() {
   io.debug(
-    events.on_flag()
-    |> motion.go_sprite(
-      true
-      |> ops.and(true),
-    )
-    |> c(
-      control.cond(true)
-      |> events.broadcast(OString("message")),
+    sprite.sprite([])
+    |> sprite.blocks(
+      events.on_flag()
+      |> looks.say(OString("Hello, world!")),
     ),
   )
 }
