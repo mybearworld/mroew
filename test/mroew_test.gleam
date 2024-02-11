@@ -11,7 +11,7 @@ pub fn main() {
 }
 
 fn sprite1() {
-  sprite.sprite([])
+  sprite.sprite("Sprite1", [])
   |> sprite.blocks(
     events.on_flag()
     |> looks.say(OString("Hello, world!")),
