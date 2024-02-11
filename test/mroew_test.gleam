@@ -11,7 +11,8 @@ pub fn main() {
 }
 
 fn sprite1() {
-  sprite.sprite("Sprite1", [])
+  sprite.sprite("Sprite1")
+  |> sprite.costume("Scratch Cat", "https://link/to/scratchCat")
   |> sprite.blocks(
     events.on_flag()
     |> looks.say(OString("Hello, world!")),
