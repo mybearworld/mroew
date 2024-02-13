@@ -81,8 +81,8 @@ fn to_target(sprite: Sprite) {
 fn blocks_to_json(blocks: Blocks, script_index: Int) {
   let items =
     list.map_fold(blocks, 0, fn(index, block) {
-      let return = case block {
-        BTBlocks(_, _) -> #(index + 1, [])
+      #(index + 1, case block {
+        BTBlocks(_, _) -> []
         // to do
         BTBlock(block) ->
           block_to_json(
@@ -92,9 +92,7 @@ fn blocks_to_json(blocks: Blocks, script_index: Int) {
             index,
             False,
           )
-      }
-
-      return
+      })
     }).1
     |> list.flatten
   json.object(items)
@@ -106,7 +104,7 @@ fn block_to_json(
   id_prefix: String,
   new_subindex: Int,
   isolated: Bool,
-) -> #(Int, List(#(String, Json))) {
+) -> List(#(String, Json)) {
   let block_id = id_prefix <> int.to_string(new_subindex)
 
   let inputs =
@@ -119,7 +117,7 @@ fn block_to_json(
             block_id <> "::",
             input_index,
             True,
-          ).1,
+          ),
           #(
             input.name,
             json.preprocessed_array([
@@ -176,7 +174,7 @@ fn block_to_json(
       }),
     )
 
-  #(new_subindex + 1, [
+  [
     #(
       block_id,
       json.object([
@@ -197,7 +195,7 @@ fn block_to_json(
       |> list.map(fn(input) { input.0 })
       |> list.flatten
     }
-  ])
+  ]
 }
 
 type Zip
