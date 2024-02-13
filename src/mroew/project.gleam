@@ -88,7 +88,7 @@ fn blocks_to_json(blocks: Blocks, script_index: Int) {
           block_to_json(
             block,
             index == 0,
-            int.to_string(script_index) <> "::",
+            int.to_string(script_index) <> "s",
             index,
             False,
           )
@@ -114,7 +114,7 @@ fn block_to_json(
           block_to_json(
             complex_block,
             False,
-            block_id <> "::",
+            block_id <> "o",
             input_index,
             True,
           ),
@@ -122,7 +122,7 @@ fn block_to_json(
             input.name,
             json.preprocessed_array([
               json.int(3),
-              json.string(block_id <> "::" <> int.to_string(input_index)),
+              json.string(block_id <> "i" <> int.to_string(input_index)),
             ]),
           ),
         )
