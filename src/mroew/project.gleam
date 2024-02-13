@@ -52,8 +52,8 @@ fn to_target(sprite: Sprite) {
       json.preprocessed_array(
         {
           sprite.blocks
-          |> list.map_fold(0, fn(memo, script) {
-            #(memo + 1, blocks_to_json(script, memo))
+          |> list.map_fold(0, fn(script_index, script) {
+            #(script_index + 1, blocks_to_json(script, script_index))
           })
         }.1,
       ),
