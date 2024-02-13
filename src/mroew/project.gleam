@@ -32,8 +32,8 @@ pub fn export(project: Project, name: String) {
 fn project_json(project: Project) {
   json.object([
     #("targets", json.preprocessed_array(list.map(project, to_target))),
-    #("extensions", json.array([], json.string)),
-    #("monitors", json.array([], json.string)),
+    #("extensions", json.preprocessed_array([])),
+    #("monitors", json.preprocessed_array([])),
     #(
       "meta",
       json.object([
