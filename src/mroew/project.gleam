@@ -88,7 +88,7 @@ fn blocks_to_json(blocks: Blocks, script_index: Int) {
           block_to_json(
             block,
             index == 0,
-            int.to_string(script_index) <> "::" <> int.to_string(index) <> "::",
+            int.to_string(script_index) <> "::",
             index,
             False,
           )
@@ -104,10 +104,9 @@ fn block_to_json(
   block: Block,
   toplevel: Bool,
   id_prefix: String,
-  last_block_index: Int,
+  new_subindex: Int,
   isolated: Bool,
 ) -> #(Int, List(#(String, Json))) {
-  let new_subindex = last_block_index + 1
   let block_id = id_prefix <> int.to_string(new_subindex)
 
   let inputs =
@@ -118,14 +117,14 @@ fn block_to_json(
             complex_block,
             False,
             block_id <> "::",
-            input_index - 1,
+            input_index,
             True,
           ).1,
           #(
             input.name,
             json.preprocessed_array([
               json.int(3),
-              json.string(block_id <> "::" <> int.to_string(input_index)),
+              json.string(block_id <> "::" <> int.to_string(input_index + 1)),
             ]),
           ),
         )
@@ -182,7 +181,7 @@ fn block_to_json(
     |> list.map(fn(input) { input.0 })
     |> list.flatten,
   )
-  #(new_subindex, [
+  #(new_subindex + 1, [
     #(
       block_id,
       json.object([
