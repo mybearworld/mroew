@@ -3,7 +3,7 @@ import gleam/int
 import gleam/float
 import gleam/list
 import gleam/option.{None, Some}
-import gleam/json
+import gleam/json.{type Json}
 import mroew/blocks.{
   type Block, type Blocks, BTBlock, BTBlocks, OComplex, OFloat, OInt, OMessage,
   OString,
@@ -90,6 +90,7 @@ fn blocks_to_json(blocks: Blocks, script_index: Int) {
             index == 0,
             int.to_string(script_index) <> "::" <> int.to_string(index) <> "::",
             index,
+            False,
           )
       }
 
@@ -104,22 +105,36 @@ fn block_to_json(
   toplevel: Bool,
   id_prefix: String,
   last_block_index: Int,
-) {
+  isolated: Bool,
+) -> #(Int, List(#(String, Json))) {
   let new_subindex = last_block_index + 1
+  let block_id = id_prefix <> int.to_string(new_subindex)
 
   let inputs =
-    json.object(
-      list.map(block.inputs, fn(input) {
-        #(
+    list.map_fold(block.inputs, 1, fn(input_index, input) {
+      #(input_index + 1, case input.value {
+        OComplex(complex_block) -> #(
+          block_to_json(
+            complex_block,
+            False,
+            block_id <> "::",
+            input_index - 1,
+            True,
+          ).1,
+          #(
+            input.name,
+            json.preprocessed_array([
+              json.int(3),
+              json.string(block_id <> "::" <> int.to_string(input_index)),
+            ]),
+          ),
+        )
+        _ -> #([], #(
           input.name,
           json.preprocessed_array([
             json.int(case input.default {
               None -> 2
-              Some(_) ->
-                case input.value {
-                  OComplex(_) -> 3
-                  _ -> 1
-                }
+              Some(_) -> 1
             }),
             json.preprocessed_array(case input.value {
               OString(string) -> [json.int(10), json.string(string)]
@@ -133,12 +148,18 @@ fn block_to_json(
                 json.string(message),
                 json.null(),
               ]
-              OComplex(_) -> []
+              OComplex(_) ->
+                panic as "In non-OComplex arm, but value is OComplex"
             }),
           ]),
-        )
-      }),
-    )
+        ))
+      })
+    }).1
+
+  let input_object =
+    inputs
+    |> list.map(fn(input) { input.1 })
+    |> json.object
 
   let fields =
     json.object(
@@ -156,20 +177,32 @@ fn block_to_json(
       }),
     )
 
+  io.debug(
+    inputs
+    |> list.map(fn(input) { input.0 })
+    |> list.flatten,
+  )
   #(new_subindex, [
     #(
-      id_prefix
-      <> int.to_string(new_subindex),
+      block_id,
       json.object([
-        #("next", json.string(id_prefix <> int.to_string(new_subindex + 1))),
+        #("next", case isolated {
+          True -> json.null()
+          False -> json.string(id_prefix <> int.to_string(new_subindex + 1))
+        }),
         #("opcode", json.string(block.opcode)),
         #("topLevel", json.bool(toplevel)),
         #("x", json.int(0)),
         #("y", json.int(0)),
-        #("inputs", inputs),
+        #("inputs", input_object),
         #("fields", fields),
       ]),
     ),
+    ..{
+      inputs
+      |> list.map(fn(input) { input.0 })
+      |> list.flatten
+    }
   ])
 }
 
