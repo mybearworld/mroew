@@ -124,7 +124,7 @@ fn block_to_json(
             input.name,
             json.preprocessed_array([
               json.int(3),
-              json.string(block_id <> "::" <> int.to_string(input_index + 1)),
+              json.string(block_id <> "::" <> int.to_string(input_index)),
             ]),
           ),
         )
