@@ -7,7 +7,7 @@ import mroew/sprite
 pub fn main() {
   project.project()
   |> project.add_sprite(sprite1())
-  |> project.export()
+  |> project.export("project.sb3")
 }
 
 fn sprite1() {
