@@ -111,8 +111,8 @@ fn block_to_json(
         #("topLevel", json.bool(toplevel)),
         #("x", json.int(0)),
         #("y", json.int(0)),
-        #("inputs", json.preprocessed_array([])),
-        #("fields", json.preprocessed_array([])),
+        #("inputs", json.object([])),
+        #("fields", json.object([])),
       ]),
     ),
   ])
