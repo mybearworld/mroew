@@ -6,7 +6,7 @@ pub type Blocks =
 
 pub type BlockType {
   BTBlock(Block)
-  BTBlocks(Blocks)
+  BTBlocks(main_block: Block, blocks: Blocks)
 }
 
 pub type Block {
@@ -68,5 +68,19 @@ pub fn boolean(operator: Operator) {
 }
 
 pub fn c(blocks: Blocks) {
-  fn(cblocks: Blocks) { list.append(cblocks, [BTBlocks(blocks)]) }
+  fn(cblocks: Blocks) {
+    let separated_blocks = case list.pop(blocks, fn(_) { True }) {
+      Ok(value) -> value
+      Error(_) -> panic as "c got an empty array"
+    }
+    list.append(cblocks, [
+      BTBlocks(
+        main_block: case separated_blocks.0 {
+          BTBlock(value) -> value
+          BTBlocks(_, _) -> panic as "main_block of a c call is BTBlocks"
+        },
+        blocks: separated_blocks.1,
+      ),
+    ])
+  }
 }

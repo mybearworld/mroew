@@ -82,7 +82,7 @@ fn blocks_to_json(blocks: Blocks, script_index: Int) {
   let items =
     list.map_fold(blocks, 0, fn(index, block) {
       let return = case block {
-        BTBlocks(_blocks) -> #(index + 1, [])
+        BTBlocks(_, _) -> #(index + 1, [])
         // to do
         BTBlock(block) ->
           block_to_json(
