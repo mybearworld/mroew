@@ -58,7 +58,11 @@ fn to_target(sprite: Sprite) {
         {
           sprite.blocks
           |> list.map_fold(0, fn(script_index, script) {
-            #(script_index + 1, blocks_to_json(script, script_index))
+            #(
+              script_index
+              + 1,
+              blocks_to_json(script, int.to_string(script_index) <> "s"),
+            )
           })
         }.1,
       ),
@@ -78,24 +82,30 @@ fn to_target(sprite: Sprite) {
   // todo: the stage exists
 }
 
-fn blocks_to_json(blocks: Blocks, script_index: Int) {
-  let items =
-    list.map_fold(blocks, 0, fn(index, block) {
-      #(index + 1, case block {
-        BTBlocks(_, _) -> []
-        // to do
-        BTBlock(block) ->
-          block_to_json(
-            block,
-            index == 0,
-            int.to_string(script_index) <> "s",
-            index,
-            False,
-          )
-      })
-    }).1
-    |> list.flatten
-  json.object(items)
+fn blocks_to_json(blocks: Blocks, script_prefix: String) {
+  blocks_to_json_arr(blocks, script_prefix)
+  |> json.object
+}
+
+fn blocks_to_json_arr(blocks: Blocks, script_prefix: String) {
+  list.map_fold(blocks, 0, fn(index, block) {
+    #(index + 1, case block {
+      BTBlocks(main_block, blocks) ->
+        [
+          block_to_json(main_block, False, script_prefix, index, False, True),
+          ..[
+            blocks_to_json_arr(
+              blocks,
+              script_prefix <> int.to_string(index) <> "u",
+            ),
+          ]
+        ]
+        |> list.flatten
+      BTBlock(block) ->
+        block_to_json(block, index == 0, script_prefix, index, False, False)
+    })
+  }).1
+  |> list.flatten
 }
 
 fn block_to_json(
@@ -104,6 +114,7 @@ fn block_to_json(
   id_prefix: String,
   new_subindex: Int,
   isolated: Bool,
+  substack: Bool,
 ) -> List(#(String, Json)) {
   let block_id = id_prefix <> int.to_string(new_subindex)
 
@@ -117,6 +128,7 @@ fn block_to_json(
             block_id <> "o",
             input_index,
             True,
+            False,
           ),
           #(
             input.name,
@@ -153,10 +165,11 @@ fn block_to_json(
       })
     }).1
 
-  let input_object =
+  let input_array =
     inputs
     |> list.map(fn(input) { input.1 })
-    |> json.object
+
+  let input_object = json.object(input_array)
 
   let fields =
     json.object(
@@ -174,6 +187,15 @@ fn block_to_json(
       }),
     )
 
+  let substack_object =
+    json.object([
+      #(
+        "SUBSTACK",
+        json.preprocessed_array([json.int(2), json.string(block_id <> "u0")]),
+      ),
+      ..input_array
+    ])
+
   [
     #(
       block_id,
@@ -186,7 +208,10 @@ fn block_to_json(
         #("topLevel", json.bool(toplevel)),
         #("x", json.int(0)),
         #("y", json.int(0)),
-        #("inputs", input_object),
+        #("inputs", case substack {
+          True -> substack_object
+          False -> input_object
+        }),
         #("fields", fields),
       ]),
     ),
