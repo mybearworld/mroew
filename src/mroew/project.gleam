@@ -176,11 +176,6 @@ fn block_to_json(
       }),
     )
 
-  io.debug(
-    inputs
-    |> list.map(fn(input) { input.0 })
-    |> list.flatten,
-  )
   #(new_subindex + 1, [
     #(
       block_id,
