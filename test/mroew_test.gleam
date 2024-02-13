@@ -1,4 +1,4 @@
-import mroew/blocks.{OInt, OString}
+import mroew/blocks.{OString}
 import mroew/blocks/looks
 import mroew/blocks/events
 import mroew/blocks/ops
