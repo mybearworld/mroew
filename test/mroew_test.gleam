@@ -16,11 +16,12 @@ fn sprite1() {
   |> sprite.costume("Scratch Cat", "https://link/to/scratchCat")
   |> sprite.blocks(
     events.on_flag()
-    |> looks.say_timed(
-      OString("Hello, ")
-      |> ops.join(OString("world!")),
-      OInt(1)
-      |> ops.add(OInt(2)),
+    |> looks.say(
+      OString("H")
+      |> ops.join(OString("e"))
+      |> ops.join(OString("l"))
+      |> ops.join(OString("l"))
+      |> ops.join(OString("!")),
     ),
   )
 }
