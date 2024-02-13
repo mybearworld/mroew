@@ -140,6 +140,22 @@ fn block_to_json(
       }),
     )
 
+  let fields =
+    json.object(
+      list.map(block.fields, fn(field) {
+        #(
+          field.name,
+          json.preprocessed_array([
+            json.string(field.value),
+            case field.subvalue {
+              Some(subvalue) -> json.string(subvalue)
+              None -> json.null()
+            },
+          ]),
+        )
+      }),
+    )
+
   #(new_subindex, [
     #(
       id_prefix
@@ -151,7 +167,7 @@ fn block_to_json(
         #("x", json.int(0)),
         #("y", json.int(0)),
         #("inputs", inputs),
-        #("fields", json.object([])),
+        #("fields", fields),
       ]),
     ),
   ])

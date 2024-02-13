@@ -1,6 +1,7 @@
 import mroew/blocks.{OString}
 import mroew/blocks/looks
 import mroew/blocks/events
+import mroew/blocks/sensing
 import mroew/project
 import mroew/sprite
 
@@ -15,6 +16,7 @@ fn sprite1() {
   |> sprite.costume("Scratch Cat", "https://link/to/scratchCat")
   |> sprite.blocks(
     events.on_flag()
-    |> looks.say(OString("Hello, world!")),
+    |> looks.say(OString("Hello, world!"))
+    |> sensing.set_draggable(True),
   )
 }
