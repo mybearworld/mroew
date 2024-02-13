@@ -1,8 +1,13 @@
 import gleam/io
 import gleam/int
+import gleam/float
 import gleam/list
+import gleam/option.{None, Some}
 import gleam/json
-import mroew/blocks.{type Block, type Blocks, BTBlock, BTBlocks}
+import mroew/blocks.{
+  type Block, type Blocks, BTBlock, BTBlocks, OComplex, OFloat, OInt, OMessage,
+  OString,
+}
 import mroew/sprite.{type Sprite}
 
 pub type Project =
@@ -101,6 +106,40 @@ fn block_to_json(
   last_block_index: Int,
 ) {
   let new_subindex = last_block_index + 1
+
+  let inputs =
+    json.object(
+      list.map(block.inputs, fn(input) {
+        #(
+          input.name,
+          json.preprocessed_array([
+            json.int(case input.default {
+              None -> 2
+              Some(_) ->
+                case input.value {
+                  OComplex(_) -> 3
+                  _ -> 1
+                }
+            }),
+            json.preprocessed_array(case input.value {
+              OString(string) -> [json.int(10), json.string(string)]
+              OInt(number) -> [json.int(4), json.string(int.to_string(number))]
+              OFloat(number) -> [
+                json.int(4),
+                json.string(float.to_string(number)),
+              ]
+              OMessage(message) -> [
+                json.int(11),
+                json.string(message),
+                json.null(),
+              ]
+              OComplex(_) -> []
+            }),
+          ]),
+        )
+      }),
+    )
+
   #(new_subindex, [
     #(
       id_prefix
@@ -111,7 +150,7 @@ fn block_to_json(
         #("topLevel", json.bool(toplevel)),
         #("x", json.int(0)),
         #("y", json.int(0)),
-        #("inputs", json.object([])),
+        #("inputs", inputs),
         #("fields", json.object([])),
       ]),
     ),
