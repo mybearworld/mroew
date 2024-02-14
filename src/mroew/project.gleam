@@ -85,7 +85,7 @@ fn to_target(sprite: Sprite, is_stage: Bool, layer_order: Int) {
             #(
               script_index
               + 1,
-              blocks_to_json(script, int.to_string(script_index) <> "s"),
+              blocks_to_json(script, int.to_string(script_index) <> "s", True),
             )
           })
         }.1
@@ -153,19 +153,30 @@ fn to_target(sprite: Sprite, is_stage: Bool, layer_order: Int) {
   // todo: the stage exists
 }
 
-fn blocks_to_json(blocks: Blocks, script_prefix: String) {
+fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
   list.map_fold(blocks, 0, fn(index, block) {
     #(index + 1, case block {
       BTBlocks(main_block, blocks) ->
         [
           block_to_json(main_block, False, script_prefix, index, False, True),
           ..[
-            blocks_to_json(blocks, script_prefix <> int.to_string(index) <> "u"),
+            blocks_to_json(
+              blocks,
+              script_prefix <> int.to_string(index) <> "u",
+              False,
+            ),
           ]
         ]
         |> list.flatten
       BTBlock(block) ->
-        block_to_json(block, index == 0, script_prefix, index, False, False)
+        block_to_json(
+          block,
+          index == 0 && top_level,
+          script_prefix,
+          index,
+          False,
+          False,
+        )
     })
   }).1
   |> list.flatten
