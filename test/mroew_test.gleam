@@ -23,6 +23,7 @@ fn sprite1() {
       |> ops.join(OString("e"))
       |> ops.join(OString("l"))
       |> ops.join(OString("l"))
+      |> ops.join(OString("o"))
       |> ops.join(OString("!")),
     )
     |> c(
