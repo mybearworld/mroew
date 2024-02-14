@@ -36,16 +36,25 @@ Coming soon!
 
 ## Usage
 
-I don't currently know of a way to install packages from GitHub, and I can't upload this to Hex because it requires my email adress. Therefore, the way of using Mröw is a bit convoluted:
-
-1. Install Gleam if you haven't already.
-2. Clone this repository:
+1. Install Gleam and Git if you haven't already.
+2. Create a Gleam project:
    ```sh
-   git clone https://github.com/mybearworld/mroew.git
+   gleam new my-scratch-project
    ```
-3. Edit the file in `./test/mroew_test.gleam` to create your Mröw project.
-4. To create the sb3, run:
+3. Delete the `.github` and `test` folders.
+4. Add Mröw as a submodule:
+   ```sh
+   git submodule add https://github.com/mybearworld/mroew.git
    ```
-   gleam test
+5. Replace the `[dependencies]` and `[dev-dependencies]` in `gleam.toml` with:
+   ```toml
+   [dependencies]
+   gleam_stdlib = "~> 0.34 or ~> 1.0"
+   mroew = { path = "./mroew" }
    ```
-5. You'll have the sb3 file ready!
+6. Create your Mröw project in `src/my-scratch-project.gleam`!
+7. To create the sb3 file, run `gleam run`.
+8. (Recommended) Add sb3 files to the gitignore:
+   ```ignore
+   *.sb3
+   ```
