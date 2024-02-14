@@ -130,7 +130,7 @@ fn to_target(sprite: Sprite, is_stage: Bool) {
           let path = asset_name(sprite.name, sound.name)
           json.object([
             #("name", json.string(sound.name)),
-            #("assetID", json.string(path)),
+            #("assetId", json.string(path)),
             #("dataFormat", json.string(sound.file_type)),
             #("format", json.string("")),
             #("rate", json.int(0)),
