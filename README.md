@@ -36,7 +36,7 @@ Coming soon!
 
 ## Usage
 
-I don't currently know of a way to install packages from GitHub, and I can't upload this to Hex because it requires my email adress. Therefore, the way of using Mröw is a bit convoluted right now:
+I don't currently know of a way to install packages from GitHub, and I can't upload this to Hex because it requires my email adress. Therefore, the way of using Mröw is a bit convoluted:
 
 1. Install Gleam if you haven't already.
 2. Clone this repository:
@@ -49,5 +49,3 @@ I don't currently know of a way to install packages from GitHub, and I can't upl
    gleam test
    ```
 5. You'll have the sb3 file ready!
-
-Again, hopefully this will only be temporary, and a proper way will exist in the future.
