@@ -7,9 +7,14 @@ import mroew/project
 import mroew/sprite
 
 pub fn main() {
-  project.project()
+  project.project(stage())
   |> project.add_sprite(sprite1())
   |> project.export("project.sb3")
+}
+
+fn stage() {
+  sprite.sprite("Stage")
+  |> sprite.costume("Blank", "./test/blank.svg")
 }
 
 fn sprite1() {

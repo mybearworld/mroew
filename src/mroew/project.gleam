@@ -11,15 +11,16 @@ import mroew/blocks.{
 }
 import mroew/sprite.{type Sprite, Png, Svg}
 
-pub type Project =
-  List(Sprite)
+pub type Project {
+  Project(stage: Sprite, sprites: List(Sprite))
+}
 
-pub fn project() -> Project {
-  []
+pub fn project(stage: Sprite) -> Project {
+  Project(stage, [])
 }
 
 pub fn add_sprite(project: Project, sprite: Sprite) {
-  list.append(project, [sprite])
+  Project(..project, sprites: list.append(project.sprites, [sprite]))
 }
 
 pub fn export(project: Project, name: String) {
@@ -29,7 +30,7 @@ pub fn export(project: Project, name: String) {
     zip()
     |> file("project.json", json)
 
-  list.map(project, fn(sprite) {
+  list.map(list.append(project.sprites, [project.stage]), fn(sprite) {
     list.map(sprite.costumes, fn(costume) {
       let name =
         asset_name(sprite.name, costume.name)
@@ -59,7 +60,13 @@ fn asset_name(sprite_name: String, asset_name: String) {
 
 fn project_json(project: Project) {
   json.object([
-    #("targets", json.preprocessed_array(list.map(project, to_target))),
+    #(
+      "targets",
+      json.preprocessed_array(
+        list.map(project.sprites, to_target(_, False))
+        |> list.append([to_target(project.stage, True)]),
+      ),
+    ),
     #("extensions", json.preprocessed_array([])),
     #("monitors", json.preprocessed_array([])),
     #(
@@ -74,7 +81,7 @@ fn project_json(project: Project) {
   |> json.to_string()
 }
 
-fn to_target(sprite: Sprite) {
+fn to_target(sprite: Sprite, is_stage: Bool) {
   json.object([
     #(
       "blocks",
@@ -132,7 +139,7 @@ fn to_target(sprite: Sprite) {
         }),
       ),
     ),
-    #("isStage", json.bool(False)),
+    #("isStage", json.bool(is_stage)),
     #("name", json.string(sprite.name)),
     #("volume", json.int(100)),
     #("layerOrder", json.int(1)),
