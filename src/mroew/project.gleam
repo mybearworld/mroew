@@ -54,8 +54,10 @@ fn project_json(project: Project) {
     #(
       "targets",
       json.preprocessed_array([
-        to_target(project.stage, True),
-        ..list.map(project.sprites, to_target(_, False))
+        to_target(project.stage, True, 0),
+        ..list.map_fold(project.sprites, 1, fn(index, sprite) {
+          #(index + 1, to_target(sprite, False, index))
+        }).1
       ]),
     ),
     #("extensions", json.preprocessed_array([])),
@@ -72,7 +74,7 @@ fn project_json(project: Project) {
   |> json.to_string()
 }
 
-fn to_target(sprite: Sprite, is_stage: Bool) {
+fn to_target(sprite: Sprite, is_stage: Bool, layer_order: Int) {
   json.object([
     #(
       "blocks",
@@ -139,7 +141,7 @@ fn to_target(sprite: Sprite, is_stage: Bool) {
       }),
     ),
     #("volume", json.int(100)),
-    #("layerOrder", json.int(0)),
+    #("layerOrder", json.int(layer_order)),
     #("visible", json.bool(True)),
     #("x", json.int(0)),
     #("y", json.int(0)),
