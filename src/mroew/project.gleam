@@ -9,7 +9,7 @@ import mroew/blocks.{
   type Block, type Blocks, BTBlock, BTBlocks, OComplex, OFloat, OInt, OMessage,
   OString,
 }
-import mroew/sprite.{type Sprite}
+import mroew/sprite.{type Sprite, Png, Svg}
 
 pub type Project =
   List(Sprite)
@@ -32,13 +32,11 @@ pub fn export(project: Project, name: String) {
   list.map(project, fn(sprite) {
     list.map(sprite.costumes, fn(costume) {
       let name =
-        costume_name(sprite.name, costume.0)
-        <> case string.ends_with(costume.0, ".png") {
-          True -> ".png"
-          False -> ".svg"
-        }
+        costume_name(sprite.name, costume.name)
+        <> "."
+        <> sprite.image_type_to_string(costume.file_type)
       archive
-      |> from_file(name, costume.1)
+      |> from_file(name, costume.path)
     })
   })
 
@@ -92,35 +90,20 @@ fn to_target(sprite: Sprite) {
       "costumes",
       json.preprocessed_array(
         list.map(sprite.costumes, fn(costume) {
-          let is_png = string.ends_with(costume.1, ".png")
-          let name = costume_name(sprite.name, costume.0)
+          let path = costume_name(sprite.name, costume.name)
+          let file_type_string = sprite.image_type_to_string(costume.file_type)
           json.object([
-            #("name", json.string(costume.0)),
+            #("name", json.string(costume.name)),
             #(
               "bitmapResolution",
-              json.int(case is_png {
-                True -> 2
-                False -> 1
+              json.int(case costume.file_type {
+                Png -> 2
+                Svg -> 1
               }),
             ),
-            #(
-              "dataFormat",
-              json.string(case is_png {
-                True -> "png"
-                False -> "svg"
-              }),
-            ),
-            #("assetId", json.string(name)),
-            #(
-              "md5ext",
-              json.string(
-                name
-                  <> case is_png {
-                    True -> ".png"
-                    False -> ".svg"
-                  },
-              ),
-            ),
+            #("dataFormat", json.string(file_type_string)),
+            #("assetId", json.string(path)),
+            #("md5ext", json.string(path <> "." <> file_type_string)),
             #("rotationCenterX", json.int(0)),
             #("rotationCenterY", json.int(0)),
           ])
