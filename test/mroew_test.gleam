@@ -14,7 +14,7 @@ pub fn main() {
 
 fn sprite1() {
   sprite.sprite("Sprite1")
-  |> sprite.costume("Scratch Cat", "https://link/to/scratchCat")
+  |> sprite.costume("Scratch Cat", "./test/scratchCat.svg")
   |> sprite.blocks(
     events.on_flag()
     |> looks.say(

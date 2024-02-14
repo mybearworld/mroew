@@ -3,6 +3,7 @@ import gleam/int
 import gleam/float
 import gleam/list
 import gleam/option.{None, Some}
+import gleam/string
 import gleam/json.{type Json}
 import mroew/blocks.{
   type Block, type Blocks, BTBlock, BTBlocks, OComplex, OFloat, OInt, OMessage,
@@ -24,14 +25,33 @@ pub fn add_sprite(project: Project, sprite: Sprite) {
 pub fn export(project: Project, name: String) {
   let json = project_json(project)
 
-  zip()
-  |> file("project.json", "{}")
+  let archive =
+    zip()
+    |> file("project.json", json)
+
+  list.map(project, fn(sprite) {
+    list.map(sprite.costumes, fn(costume) {
+      let name =
+        costume_name(sprite.name, costume.0)
+        <> case string.ends_with(costume.0, ".png") {
+          True -> ".png"
+          False -> ".svg"
+        }
+      archive
+      |> from_file(name, costume.1)
+    })
+  })
+
+  archive
   |> out(name)
   io.debug(project)
-  io.print(
-    json
-    |> json.to_string,
-  )
+  io.print(json)
+}
+
+fn costume_name(sprite_name: String, costume_name: String) {
+  string.replace(sprite_name, ".", "")
+  <> "."
+  <> string.replace(costume_name, ".", "")
 }
 
 fn project_json(project: Project) {
@@ -48,6 +68,7 @@ fn project_json(project: Project) {
       ]),
     ),
   ])
+  |> json.to_string()
 }
 
 fn to_target(sprite: Sprite) {
@@ -65,6 +86,45 @@ fn to_target(sprite: Sprite) {
             )
           })
         }.1,
+      ),
+    ),
+    #(
+      "costumes",
+      json.preprocessed_array(
+        list.map(sprite.costumes, fn(costume) {
+          let is_png = string.ends_with(costume.1, ".png")
+          let name = costume_name(sprite.name, costume.0)
+          json.object([
+            #("name", json.string(costume.0)),
+            #(
+              "bitmapResolution",
+              json.int(case is_png {
+                True -> 2
+                False -> 1
+              }),
+            ),
+            #(
+              "dataFormat",
+              json.string(case is_png {
+                True -> "png"
+                False -> "svg"
+              }),
+            ),
+            #("assetId", json.string(name)),
+            #(
+              "md5ext",
+              json.string(
+                name
+                  <> case is_png {
+                    True -> ".png"
+                    False -> ".svg"
+                  },
+              ),
+            ),
+            #("rotationCenterX", json.int(0)),
+            #("rotationCenterY", json.int(0)),
+          ])
+        }),
       ),
     ),
     #("isStage", json.bool(False)),
@@ -230,6 +290,9 @@ fn zip() -> Zip
 
 @external(javascript, "../zip.mjs", "file")
 fn file(zip: Zip, file_name: String, data: String) -> Zip
+
+@external(javascript, "../zip.mjs", "fromFile")
+fn from_file(zip: Zip, file_name: String, other_file_name: String) -> Zip
 
 @external(javascript, "../zip.mjs", "out")
 fn out(zip: Zip, file_name: String) -> Zip
