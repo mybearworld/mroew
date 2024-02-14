@@ -58,3 +58,9 @@ Coming soon!
    ```ignore
    *.sb3
    ```
+
+## To do
+
+- Variables/lists
+- Custom blocks - for now you can just make a function
+- Proper rotation center for costumes
