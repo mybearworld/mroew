@@ -45,8 +45,6 @@ pub fn export(project: Project, name: String) {
 
   archive
   |> out(name)
-  //io.debug(project)
-  io.print(json)
 }
 
 fn project_json(project: Project) {
