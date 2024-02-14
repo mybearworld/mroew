@@ -85,7 +85,7 @@ fn to_target(sprite: Sprite, is_stage: Bool) {
   json.object([
     #(
       "blocks",
-      json.preprocessed_array(
+      json.object(
         {
           sprite.blocks
           |> list.map_fold(0, fn(script_index, script) {
@@ -95,7 +95,8 @@ fn to_target(sprite: Sprite, is_stage: Bool) {
               blocks_to_json(script, int.to_string(script_index) <> "s"),
             )
           })
-        }.1,
+        }.1
+        |> list.flatten,
       ),
     ),
     #(
@@ -161,21 +162,13 @@ fn to_target(sprite: Sprite, is_stage: Bool) {
 }
 
 fn blocks_to_json(blocks: Blocks, script_prefix: String) {
-  blocks_to_json_arr(blocks, script_prefix)
-  |> json.object
-}
-
-fn blocks_to_json_arr(blocks: Blocks, script_prefix: String) {
   list.map_fold(blocks, 0, fn(index, block) {
     #(index + 1, case block {
       BTBlocks(main_block, blocks) ->
         [
           block_to_json(main_block, False, script_prefix, index, False, True),
           ..[
-            blocks_to_json_arr(
-              blocks,
-              script_prefix <> int.to_string(index) <> "u",
-            ),
+            blocks_to_json(blocks, script_prefix <> int.to_string(index) <> "u"),
           ]
         ]
         |> list.flatten
