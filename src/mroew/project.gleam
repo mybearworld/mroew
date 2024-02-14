@@ -140,7 +140,13 @@ fn to_target(sprite: Sprite, is_stage: Bool) {
       ),
     ),
     #("isStage", json.bool(is_stage)),
-    #("name", json.string(sprite.name)),
+    #(
+      "name",
+      json.string(case is_stage {
+        True -> "Stage"
+        False -> sprite.name
+      }),
+    ),
     #("volume", json.int(100)),
     #("layerOrder", json.int(1)),
     #("visible", json.bool(True)),
