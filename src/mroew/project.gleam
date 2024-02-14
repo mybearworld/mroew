@@ -3,7 +3,6 @@ import gleam/int
 import gleam/float
 import gleam/list
 import gleam/option.{None, Some}
-import gleam/string
 import gleam/json.{type Json}
 import mroew/blocks.{
   type Block, type Blocks, BTBlock, BTBlocks, OComplex, OFloat, OInt, OMessage,
@@ -32,30 +31,22 @@ pub fn export(project: Project, name: String) {
 
   list.map(list.append(project.sprites, [project.stage]), fn(sprite) {
     list.map(sprite.costumes, fn(costume) {
-      let name =
-        asset_name(sprite.name, costume.name)
-        <> "."
-        <> sprite.image_type_to_string(costume.file_type)
       archive
-      |> from_file(name, costume.path)
+      |> from_bitarray(
+        costume.md5 <> "." <> sprite.image_type_to_string(costume.file_type),
+        costume.content,
+      )
     })
     list.map(sprite.sounds, fn(sound) {
-      let name = asset_name(sprite.name, sound.name) <> "." <> sound.file_type
       archive
-      |> from_file(name, sound.path)
+      |> from_bitarray(sound.md5 <> "." <> sound.file_type, sound.content)
     })
   })
 
   archive
   |> out(name)
-  io.debug(project)
+  //io.debug(project)
   io.print(json)
-}
-
-fn asset_name(sprite_name: String, asset_name: String) {
-  string.replace(sprite_name, ".", "")
-  <> "."
-  <> string.replace(asset_name, ".", "")
 }
 
 fn project_json(project: Project) {
@@ -103,7 +94,6 @@ fn to_target(sprite: Sprite, is_stage: Bool) {
       "costumes",
       json.preprocessed_array(
         list.map(sprite.costumes, fn(costume) {
-          let path = asset_name(sprite.name, costume.name)
           let file_type_string = sprite.image_type_to_string(costume.file_type)
           json.object([
             #("name", json.string(costume.name)),
@@ -115,8 +105,8 @@ fn to_target(sprite: Sprite, is_stage: Bool) {
               }),
             ),
             #("dataFormat", json.string(file_type_string)),
-            #("assetId", json.string(path)),
-            #("md5ext", json.string(path <> "." <> file_type_string)),
+            #("assetId", json.string(costume.md5)),
+            #("md5ext", json.string(costume.md5 <> "." <> file_type_string)),
             #("rotationCenterX", json.int(0)),
             #("rotationCenterY", json.int(0)),
           ])
@@ -127,15 +117,14 @@ fn to_target(sprite: Sprite, is_stage: Bool) {
       "sounds",
       json.preprocessed_array(
         list.map(sprite.sounds, fn(sound) {
-          let path = asset_name(sprite.name, sound.name)
           json.object([
             #("name", json.string(sound.name)),
-            #("assetId", json.string(path)),
+            #("assetId", json.string(sound.md5)),
             #("dataFormat", json.string(sound.file_type)),
             #("format", json.string("")),
             #("rate", json.int(0)),
             #("sampleCount", json.int(0)),
-            #("md5ext", json.string(path <> "." <> sound.file_type)),
+            #("md5ext", json.string(sound.md5 <> "." <> sound.file_type)),
           ])
         }),
       ),
@@ -304,7 +293,7 @@ fn zip() -> Zip
 fn file(zip: Zip, file_name: String, data: String) -> Zip
 
 @external(javascript, "../ffi.mjs", "fromFile")
-fn from_file(zip: Zip, file_name: String, other_file_name: String) -> Zip
+fn from_bitarray(zip: Zip, file_name: String, data: BitArray) -> Zip
 
 @external(javascript, "../ffi.mjs", "out")
 fn out(zip: Zip, file_name: String) -> Zip

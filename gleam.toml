@@ -17,5 +17,6 @@ target = "javascript"
 gleam_stdlib = "~> 0.34 or ~> 1.0"
 gleam_json = "~> 1.0"
 filepath = "~> 1.0"
+simplifile = "~> 1.4"
 
 [dev-dependencies]

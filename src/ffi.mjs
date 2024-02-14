@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import crypto from "node:crypto";
 import JSZip from "./jszip.min.mjs";
 
 export function zip() {
@@ -10,14 +11,21 @@ export function file(zip, fileName, data) {
   return zip;
 }
 
-export function fromFile(zip, fileName, otherFileName) {
+export function fromFile(zip, fileName, otherFileNameOrBitArray) {
   zip.file(
     fileName.startsWith("./") ? process.cwd() + fileName : fileName,
-    fs.readFileSync(otherFileName)
+    otherFileNameOrBitArray.buffer ?? fs.readFileSync(otherFileNameOrBitArray)
   );
   return zip;
 }
 
 export async function out(zip, name) {
   fs.writeFileSync(name, await zip.generateAsync({ type: "nodebuffer" }));
+}
+
+export function md5(bitArray) {
+  return crypto
+    .createHash("md5")
+    .update(Buffer.from(bitArray.buffer))
+    .digest("hex");
 }
