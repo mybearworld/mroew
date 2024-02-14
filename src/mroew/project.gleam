@@ -297,14 +297,14 @@ fn block_to_json(
 
 type Zip
 
-@external(javascript, "../zip.mjs", "zip")
+@external(javascript, "../ffi.mjs", "zip")
 fn zip() -> Zip
 
-@external(javascript, "../zip.mjs", "file")
+@external(javascript, "../ffi.mjs", "file")
 fn file(zip: Zip, file_name: String, data: String) -> Zip
 
-@external(javascript, "../zip.mjs", "fromFile")
+@external(javascript, "../ffi.mjs", "fromFile")
 fn from_file(zip: Zip, file_name: String, other_file_name: String) -> Zip
 
-@external(javascript, "../zip.mjs", "out")
+@external(javascript, "../ffi.mjs", "out")
 fn out(zip: Zip, file_name: String) -> Zip
