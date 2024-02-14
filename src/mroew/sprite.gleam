@@ -1,13 +1,14 @@
 import gleam/string
 import gleam/list
 import mroew/blocks.{type Blocks}
+import filepath
 
 pub type Sprite {
   Sprite(
     name: String,
     blocks: List(Blocks),
     costumes: List(Costume),
-    sounds: List(#(String, String)),
+    sounds: List(Sound),
   )
 }
 
@@ -18,6 +19,10 @@ pub type Costume {
 pub type ImageType {
   Png
   Svg
+}
+
+pub type Sound {
+  Sound(name: String, path: String, file_type: String)
 }
 
 pub fn image_type_to_string(image_type: ImageType) {
@@ -46,7 +51,15 @@ pub fn costume(sprite: Sprite, name: String, costume: String) {
 }
 
 pub fn sound(sprite: Sprite, name: String, sound: String) {
-  Sprite(..sprite, sounds: list.append(sprite.sounds, [#(name, sound)]))
+  Sprite(
+    ..sprite,
+    sounds: list.append(sprite.sounds, [
+      Sound(name: name, path: sound, file_type: case filepath.extension(sound) {
+        Ok(value) -> value
+        Error(_) -> panic as "Sound " <> sound <> " without extension"
+      }),
+    ]),
+  )
 }
 
 pub fn blocks(sprite: Sprite, new_blocks: Blocks) {

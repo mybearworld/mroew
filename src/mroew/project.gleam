@@ -32,11 +32,16 @@ pub fn export(project: Project, name: String) {
   list.map(project, fn(sprite) {
     list.map(sprite.costumes, fn(costume) {
       let name =
-        costume_name(sprite.name, costume.name)
+        asset_name(sprite.name, costume.name)
         <> "."
         <> sprite.image_type_to_string(costume.file_type)
       archive
       |> from_file(name, costume.path)
+    })
+    list.map(sprite.sounds, fn(sound) {
+      let name = asset_name(sprite.name, sound.name) <> "." <> sound.file_type
+      archive
+      |> from_file(name, sound.path)
     })
   })
 
@@ -46,10 +51,10 @@ pub fn export(project: Project, name: String) {
   io.print(json)
 }
 
-fn costume_name(sprite_name: String, costume_name: String) {
+fn asset_name(sprite_name: String, asset_name: String) {
   string.replace(sprite_name, ".", "")
   <> "."
-  <> string.replace(costume_name, ".", "")
+  <> string.replace(asset_name, ".", "")
 }
 
 fn project_json(project: Project) {
@@ -90,7 +95,7 @@ fn to_target(sprite: Sprite) {
       "costumes",
       json.preprocessed_array(
         list.map(sprite.costumes, fn(costume) {
-          let path = costume_name(sprite.name, costume.name)
+          let path = asset_name(sprite.name, costume.name)
           let file_type_string = sprite.image_type_to_string(costume.file_type)
           json.object([
             #("name", json.string(costume.name)),
@@ -106,6 +111,23 @@ fn to_target(sprite: Sprite) {
             #("md5ext", json.string(path <> "." <> file_type_string)),
             #("rotationCenterX", json.int(0)),
             #("rotationCenterY", json.int(0)),
+          ])
+        }),
+      ),
+    ),
+    #(
+      "sounds",
+      json.preprocessed_array(
+        list.map(sprite.sounds, fn(sound) {
+          let path = asset_name(sprite.name, sound.name)
+          json.object([
+            #("name", json.string(sound.name)),
+            #("assetID", json.string(path)),
+            #("dataFormat", json.string(sound.file_type)),
+            #("format", json.string("")),
+            #("rate", json.int(0)),
+            #("sampleCount", json.int(0)),
+            #("md5ext", json.string(path <> "." <> sound.file_type)),
           ])
         }),
       ),

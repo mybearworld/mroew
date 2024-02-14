@@ -15,6 +15,7 @@ pub fn main() {
 fn sprite1() {
   sprite.sprite("Sprite1")
   |> sprite.costume("Scratch Cat", "./test/scratchCat.svg")
+  |> sprite.sound("Blank", "./test/blank.wav")
   |> sprite.blocks(
     events.on_flag()
     |> looks.say(
