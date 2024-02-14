@@ -140,6 +140,7 @@ fn to_target(sprite: Sprite, is_stage: Bool) {
         }),
       ),
     ),
+    #("variables", json.object([])),
     #("isStage", json.bool(is_stage)),
     #(
       "name",
