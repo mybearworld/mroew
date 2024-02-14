@@ -5,8 +5,8 @@ import gleam/list
 import gleam/option.{None, Some}
 import gleam/json.{type Json}
 import mroew/blocks.{
-  type Block, type Blocks, BTBlock, BTBlocks, OComplex, OFloat, OInt, OMessage,
-  OString,
+  type Block, type Blocks, type Operator, BTBlock, BTBlocks, OComplex, OFloat,
+  OInt, OMessage, OString,
 }
 import mroew/sprite.{type Sprite, Png, Svg}
 
@@ -195,34 +195,24 @@ fn block_to_json(
           ),
           #(
             input.name,
-            json.preprocessed_array([
-              json.int(3),
-              json.string(block_id <> "i" <> int.to_string(input_index)),
-            ]),
+            json.preprocessed_array(case input.default {
+              Some(default) -> [
+                json.int(3),
+                repr_of_noncomplex_o(default),
+                json.string(block_id <> "o" <> int.to_string(input_index)),
+              ]
+              None -> [
+                json.int(2),
+                json.string(block_id <> "o" <> int.to_string(input_index)),
+              ]
+            }),
           ),
         )
         _ -> #([], #(
           input.name,
           json.preprocessed_array([
-            json.int(case input.default {
-              None -> 2
-              Some(_) -> 1
-            }),
-            json.preprocessed_array(case input.value {
-              OString(string) -> [json.int(10), json.string(string)]
-              OInt(number) -> [json.int(4), json.string(int.to_string(number))]
-              OFloat(number) -> [
-                json.int(4),
-                json.string(float.to_string(number)),
-              ]
-              OMessage(message) -> [
-                json.int(11),
-                json.string(message),
-                json.null(),
-              ]
-              OComplex(_) ->
-                panic as "In non-OComplex arm, but value is OComplex"
-            }),
+            json.int(1),
+            repr_of_noncomplex_o(input.value),
           ]),
         ))
       })
@@ -284,6 +274,17 @@ fn block_to_json(
       |> list.flatten
     }
   ]
+}
+
+fn repr_of_noncomplex_o(operator: Operator) {
+  json.preprocessed_array(case operator {
+    OString(string) -> [json.int(10), json.string(string)]
+    OInt(number) -> [json.int(4), json.string(int.to_string(number))]
+    OFloat(number) -> [json.int(4), json.string(float.to_string(number))]
+    OMessage(message) -> [json.int(11), json.string(message), json.null()]
+    OComplex(_) ->
+      panic as "In repr_of_noncomplex_o, operator is OComplex. This might be an OComplex default value, which is an issue in the block library."
+  })
 }
 
 type Zip
