@@ -62,10 +62,10 @@ fn project_json(project: Project) {
   json.object([
     #(
       "targets",
-      json.preprocessed_array(
-        list.map(project.sprites, to_target(_, False))
-        |> list.append([to_target(project.stage, True)]),
-      ),
+      json.preprocessed_array([
+        to_target(project.stage, True),
+        ..list.map(project.sprites, to_target(_, False))
+      ]),
     ),
     #("extensions", json.preprocessed_array([])),
     #("monitors", json.preprocessed_array([])),
