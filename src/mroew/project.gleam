@@ -1,4 +1,3 @@
-import gleam/io
 import gleam/int
 import gleam/float
 import gleam/list
@@ -45,6 +44,8 @@ pub fn export(project: Project, name: String) {
 
   archive
   |> out(name)
+
+  Nil
 }
 
 fn project_json(project: Project) {
