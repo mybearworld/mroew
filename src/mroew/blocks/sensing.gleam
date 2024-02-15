@@ -3,7 +3,7 @@ import mroew/blocks.{
   type Blocks, type Operator, Block, Field, Input, OComplex, OString,
 }
 
-fn touching_sprite(cblocks: Blocks, sprite: Operator) {
+pub fn touching_sprite(cblocks: Blocks, sprite: Operator) {
   Block(
     opcode: "sensing_touchingobject",
     inputs: [
