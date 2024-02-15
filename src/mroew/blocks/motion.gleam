@@ -102,8 +102,8 @@ pub fn glide(cblocks: Blocks, seconds: Operator, x: Operator, y: Operator) {
 }
 
 pub fn set_direction(cblocks: Blocks, direction: Operator) {
-  Block(opcode: "motion_pointtowards", fields: [], inputs: [
-    Input(name: "TOWARDS", default: Some(OInt(90)), value: direction),
+  Block(opcode: "motion_pointindirection", fields: [], inputs: [
+    Input(name: "DIRECTION", default: Some(OInt(90)), value: direction),
   ])
   |> blocks.stack(cblocks)
 }
