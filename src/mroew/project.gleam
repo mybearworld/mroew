@@ -1,7 +1,7 @@
 import gleam/int
 import gleam/float
 import gleam/list
-import gleam/option.{None, Some}
+import gleam/option.{type Option, None, Some}
 import gleam/json.{type Json}
 import mroew/blocks.{
   type Block, type Blocks, type Operator, BTBlock, BTBlocks, OComplex, OFloat,
@@ -157,7 +157,7 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
     #(index + 1, case block {
       BTBlocks(main_block, blocks) ->
         [
-          block_to_json(main_block, False, script_prefix, index, False, True),
+          block_to_json(main_block, False, script_prefix, index, None, True),
           ..[
             blocks_to_json(
               blocks,
@@ -173,7 +173,7 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
           index == 0 && top_level,
           script_prefix,
           index,
-          False,
+          None,
           False,
         )
     })
@@ -186,7 +186,7 @@ fn block_to_json(
   toplevel: Bool,
   id_prefix: String,
   new_subindex: Int,
-  isolated: Bool,
+  isolated_parent: Option(String),
   substack: Bool,
 ) -> List(#(String, Json)) {
   let block_id = id_prefix <> int.to_string(new_subindex)
@@ -200,7 +200,7 @@ fn block_to_json(
             False,
             block_id <> "o",
             input_index,
-            True,
+            Some(block_id),
             False,
           ),
           #(
@@ -263,9 +263,13 @@ fn block_to_json(
     #(
       block_id,
       json.object([
-        #("next", case isolated {
-          True -> json.null()
-          False -> json.string(id_prefix <> int.to_string(new_subindex + 1))
+        #("parent", case isolated_parent {
+          Some(parent) -> json.string(parent)
+          None -> json.null()
+        }),
+        #("next", case isolated_parent {
+          Some(_) -> json.null()
+          None -> json.string(id_prefix <> int.to_string(new_subindex + 1))
         }),
         #("opcode", json.string(block.opcode)),
         #("topLevel", json.bool(toplevel)),
