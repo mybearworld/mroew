@@ -208,8 +208,8 @@ fn block_to_json(
             json.preprocessed_array(case input.default {
               Some(default) -> [
                 json.int(3),
-                repr_of_noncomplex_o(default),
                 json.string(block_id <> "o" <> int.to_string(input_index)),
+                repr_of_noncomplex_o(default),
               ]
               None -> [
                 json.int(2),
