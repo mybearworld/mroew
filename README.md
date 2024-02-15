@@ -46,8 +46,11 @@ Coming soon!
    ```sh
    git submodule add https://github.com/mybearworld/mroew.git
    ```
-5. Replace the `[dependencies]` and `[dev-dependencies]` in `gleam.toml` with:
+5. Set your `gleam.toml` to:
    ```toml
+   name = "pong"
+   version = "1.0.0"
+   target = "javascript"
    [dependencies]
    gleam_stdlib = "~> 0.34 or ~> 1.0"
    mroew = { path = "./mroew" }
