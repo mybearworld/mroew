@@ -61,7 +61,7 @@ pub fn go(cblocks: Blocks, location: Location) {
 pub fn position(cblocks: Blocks, x: Operator, y: Operator) {
   Block(opcode: "motion_gotoxy", fields: [], inputs: [
     Input(name: "X", default: Some(OInt(0)), value: x),
-    Input(name: "y", default: Some(OInt(0)), value: y),
+    Input(name: "Y", default: Some(OInt(0)), value: y),
   ])
   |> blocks.stack(cblocks)
 }
