@@ -158,13 +158,13 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
       BTBlocks(main_block, blocks) ->
         [
           block_to_json(
-            main_block,
-            False,
-            script_prefix,
-            index,
-            None,
-            True,
-            False,
+            block: main_block,
+            toplevel: False,
+            id_prefix: script_prefix,
+            new_subindex: index,
+            isolated_parent: None,
+            substack: True,
+            shadow: False,
           ),
           ..[
             blocks_to_json(
@@ -177,13 +177,13 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
         |> list.flatten
       BTBlock(block) ->
         block_to_json(
-          block,
-          index == 0 && top_level,
-          script_prefix,
-          index,
-          None,
-          False,
-          False,
+          block: block,
+          toplevel: index == 0 && top_level,
+          id_prefix: script_prefix,
+          new_subindex: index,
+          isolated_parent: None,
+          substack: False,
+          shadow: False,
         )
     })
   }).1
@@ -191,13 +191,13 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
 }
 
 fn block_to_json(
-  block: Block,
-  toplevel: Bool,
-  id_prefix: String,
-  new_subindex: Int,
-  isolated_parent: Option(String),
-  substack: Bool,
-  shadow: Bool,
+  block block: Block,
+  toplevel toplevel: Bool,
+  id_prefix id_prefix: String,
+  new_subindex new_subindex: Int,
+  isolated_parent isolated_parent: Option(String),
+  substack substack: Bool,
+  shadow shadow: Bool,
 ) -> List(#(String, Json)) {
   let block_id = id_prefix <> int.to_string(new_subindex)
 
@@ -206,24 +206,24 @@ fn block_to_json(
       #(input_index + 1, case input.value {
         OComplex(complex_block) -> #(
           block_to_json(
-            complex_block,
-            False,
-            block_id <> "o",
-            input_index,
-            Some(block_id),
-            False,
-            False,
+            block: complex_block,
+            toplevel: False,
+            id_prefix: block_id <> "o",
+            new_subindex: input_index,
+            isolated_parent: Some(block_id),
+            substack: False,
+            shadow: False,
           )
           |> list.append(case input.default {
             Some(OComplex(block)) ->
               block_to_json(
-                block,
-                True,
-                block_id <> "d",
-                input_index,
-                None,
-                False,
-                True,
+                block: block,
+                toplevel: True,
+                id_prefix: block_id <> "d",
+                new_subindex: input_index,
+                isolated_parent: None,
+                substack: False,
+                shadow: True,
               )
             _ -> []
           }),
