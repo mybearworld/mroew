@@ -147,7 +147,6 @@ fn to_target(sprite: Sprite, is_stage: Bool, layer_order: Int) {
     #("draggable", json.bool(False)),
     #("rotationStyle", json.string("all around")),
   ])
-  // todo: the stage exists
 }
 
 fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
