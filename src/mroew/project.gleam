@@ -157,7 +157,15 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
     #(index + 1, case block {
       BTBlocks(main_block, blocks) ->
         [
-          block_to_json(main_block, False, script_prefix, index, None, True),
+          block_to_json(
+            main_block,
+            False,
+            script_prefix,
+            index,
+            None,
+            True,
+            False,
+          ),
           ..[
             blocks_to_json(
               blocks,
@@ -175,6 +183,7 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
           index,
           None,
           False,
+          False,
         )
     })
   }).1
@@ -188,6 +197,7 @@ fn block_to_json(
   new_subindex: Int,
   isolated_parent: Option(String),
   substack: Bool,
+  shadow: Bool,
 ) -> List(#(String, Json)) {
   let block_id = id_prefix <> int.to_string(new_subindex)
 
@@ -202,10 +212,29 @@ fn block_to_json(
             input_index,
             Some(block_id),
             False,
-          ),
+            False,
+          )
+          |> list.append(case input.default {
+            Some(OComplex(block)) ->
+              block_to_json(
+                block,
+                True,
+                block_id <> "d",
+                input_index,
+                None,
+                False,
+                True,
+              )
+            _ -> []
+          }),
           #(
             input.name,
             json.preprocessed_array(case input.default {
+              Some(OComplex(_)) -> [
+                json.int(3),
+                json.string(block_id <> "o" <> int.to_string(input_index)),
+                json.string(block_id <> "d" <> int.to_string(input_index)),
+              ]
               Some(default) -> [
                 json.int(3),
                 json.string(block_id <> "o" <> int.to_string(input_index)),
@@ -262,25 +291,31 @@ fn block_to_json(
   [
     #(
       block_id,
-      json.object([
-        #("parent", case isolated_parent {
-          Some(parent) -> json.string(parent)
-          None -> json.null()
+      json.object(
+        [
+          #("parent", case isolated_parent {
+            Some(parent) -> json.string(parent)
+            None -> json.null()
+          }),
+          #("next", case isolated_parent {
+            Some(_) -> json.null()
+            None -> json.string(id_prefix <> int.to_string(new_subindex + 1))
+          }),
+          #("opcode", json.string(block.opcode)),
+          #("topLevel", json.bool(toplevel)),
+          #("x", json.int(0)),
+          #("y", json.int(0)),
+          #("inputs", case substack {
+            True -> substack_object
+            False -> input_object
+          }),
+          #("fields", fields),
+        ]
+        |> list.append(case shadow {
+          True -> [#("shadow", json.bool(True))]
+          False -> []
         }),
-        #("next", case isolated_parent {
-          Some(_) -> json.null()
-          None -> json.string(id_prefix <> int.to_string(new_subindex + 1))
-        }),
-        #("opcode", json.string(block.opcode)),
-        #("topLevel", json.bool(toplevel)),
-        #("x", json.int(0)),
-        #("y", json.int(0)),
-        #("inputs", case substack {
-          True -> substack_object
-          False -> input_object
-        }),
-        #("fields", fields),
-      ]),
+      ),
     ),
     ..{
       inputs
@@ -296,8 +331,7 @@ fn repr_of_noncomplex_o(operator: Operator) {
     OInt(number) -> [json.int(4), json.string(int.to_string(number))]
     OFloat(number) -> [json.int(4), json.string(float.to_string(number))]
     OMessage(message) -> [json.int(11), json.string(message), json.null()]
-    OComplex(_) ->
-      panic as "In repr_of_noncomplex_o, operator is OComplex. This might be an OComplex default value, which is an issue in the block library."
+    OComplex(_) -> panic as "In repr_of_noncomplex_o, operator is OComplex."
   })
 }
 

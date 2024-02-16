@@ -1,6 +1,6 @@
-import mroew/blocks.{OString, c}
+import mroew/blocks.{OString}
+import mroew/blocks/motion
 import mroew/blocks/looks
-import mroew/blocks/control
 import mroew/blocks/events
 import mroew/blocks/ops
 import mroew/project
@@ -31,9 +31,6 @@ fn sprite1() {
       |> ops.join(OString("o"))
       |> ops.join(OString("!")),
     )
-    |> c(
-      control.forever()
-      |> looks.say(OString("Hi :)")),
-    ),
+    |> motion.point_to_sprite(OString("Sprite2")),
   )
 }
