@@ -44,8 +44,6 @@ pub fn export(project: Project, name: String) {
 
   archive
   |> out(name)
-
-  Nil
 }
 
 fn project_json(project: Project) {
@@ -343,4 +341,4 @@ fn file(zip: Zip, file_name: String, data: String) -> Zip
 fn from_bitarray(zip: Zip, file_name: String, data: BitArray) -> Zip
 
 @external(javascript, "../ffi.mjs", "out")
-fn out(zip: Zip, file_name: String) -> Zip
+fn out(zip: Zip, file_name: String) -> Nil
