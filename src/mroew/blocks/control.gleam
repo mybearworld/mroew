@@ -53,7 +53,7 @@ pub fn repeat_until(condition: Operator) {
 pub fn stop(cblocks: Blocks, stop_action: StopAction) {
   Block(opcode: "control_stop", inputs: [], fields: [
     Field(
-      name: "STOP_ACTION",
+      name: "STOP_OPTION",
       value: stop_action_to_string(stop_action),
       subvalue: None,
     ),
