@@ -66,4 +66,3 @@ Coming soon!
 
 - Variables/lists
 - Custom blocks - for now you can just make a function
-- Proper rotation center for costumes
