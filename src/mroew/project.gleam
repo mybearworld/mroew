@@ -204,7 +204,7 @@ fn block_to_json(
   let block_id = id_prefix <> int.to_string(new_subindex)
 
   let inputs =
-    list.map_fold(block.inputs, 1, fn(input_index, input) {
+    list.map_fold(block.inputs, 0, fn(input_index, input) {
       #(input_index + 1, case input.value {
         OComplex(complex_block) -> #(
           block_to_json(
