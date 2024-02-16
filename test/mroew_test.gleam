@@ -1,6 +1,6 @@
-import mroew/blocks.{OString, c}
+import mroew/blocks.{OInt, OString, c, true}
 import mroew/blocks/control
-import mroew/blocks/motion
+import mroew/blocks/looks
 import mroew/blocks/events
 import mroew/project
 import mroew/sprite
@@ -24,7 +24,10 @@ fn sprite1() {
     events.on_flag()
     |> c(
       control.forever()
-      |> motion.point_to_sprite(OString("Sprite2")),
+      |> c(
+        control.cond(true)
+        |> looks.say_timed(OString("Hi"), OInt(2)),
+      ),
     ),
   )
 }
