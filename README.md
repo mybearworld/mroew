@@ -48,7 +48,7 @@ Coming soon!
    ```
 5. Set your `gleam.toml` to:
    ```toml
-   name = "pong"
+   name = "my-scratch-project"
    version = "1.0.0"
    target = "javascript"
    [dependencies]
