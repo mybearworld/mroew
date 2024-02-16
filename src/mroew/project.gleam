@@ -152,7 +152,7 @@ fn to_target(sprite: Sprite, is_stage: Bool, layer_order: Int) {
 fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
   list.map_fold(blocks, 0, fn(index, block) {
     #(index + 1, case block {
-      BTBlocks(main_block, blocks) ->
+      BTBlocks(main_block, subblocks) ->
         [
           block_to_json(
             block: main_block,
@@ -165,7 +165,7 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
           ),
           ..[
             blocks_to_json(
-              blocks,
+              subblocks,
               script_prefix <> int.to_string(index) <> "u",
               False,
             ),
