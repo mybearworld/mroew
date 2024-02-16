@@ -173,9 +173,17 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
       BTBlock(block) ->
         block_to_json(
           block: block,
-          state: case index == 0 && top_level {
-            True -> TopLevel
-            False -> Block
+          state: case top_level {
+            True ->
+              case index == 0 {
+                True -> TopLevel
+                False -> Block
+              }
+            False ->
+              case index == list.length(blocks) - 1 {
+                True -> LastSubstackBlock
+                False -> Block
+              }
           },
           id_prefix: script_prefix,
           new_subindex: index,
@@ -285,6 +293,7 @@ fn block_to_json(
           }),
           #("next", case state {
             Operator(_) -> json.null()
+            LastSubstackBlock -> json.null()
             _ -> json.string(id_prefix <> int.to_string(new_subindex + 1))
           }),
           #("opcode", json.string(block.opcode)),
@@ -317,6 +326,7 @@ type BlockState {
   Menu
   Substack
   Operator(parent: String)
+  LastSubstackBlock
 }
 
 fn repr_of_noncomplex_o(operator: Operator) {

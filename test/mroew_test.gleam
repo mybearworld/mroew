@@ -1,8 +1,7 @@
-import mroew/blocks.{OString}
+import mroew/blocks.{OString, c}
+import mroew/blocks/control
 import mroew/blocks/motion
-import mroew/blocks/looks
 import mroew/blocks/events
-import mroew/blocks/ops
 import mroew/project
 import mroew/sprite
 
@@ -23,14 +22,9 @@ fn sprite1() {
   |> sprite.sound("Blank", "./test/blank.wav")
   |> sprite.blocks(
     events.on_flag()
-    |> looks.say(
-      OString("H")
-      |> ops.join(OString("e"))
-      |> ops.join(OString("l"))
-      |> ops.join(OString("l"))
-      |> ops.join(OString("o"))
-      |> ops.join(OString("!")),
-    )
-    |> motion.point_to_sprite(OString("Sprite2")),
+    |> c(
+      control.forever()
+      |> motion.point_to_sprite(OString("Sprite2")),
+    ),
   )
 }
