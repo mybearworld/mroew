@@ -20,6 +20,8 @@ pub type Costume {
     file_type: ImageType,
     content: BitArray,
     md5: String,
+    width: Int,
+    height: Int,
   )
 }
 
@@ -49,18 +51,30 @@ pub fn sprite(name: String) {
   Sprite(name: name, blocks: [], costumes: [], sounds: [])
 }
 
-pub fn costume(sprite: Sprite, name: String, costume: String) {
+pub fn costume(
+  sprite: Sprite,
+  name: String,
+  costume: String,
+  width: Int,
+  height: Int,
+) {
   let #(content, md5) = get_content_md5(costume)
 
   Sprite(
     ..sprite,
     costumes: list.append(sprite.costumes, [
-      Costume(name: name, path: costume, content: content, md5: md5, file_type: case
-        string.ends_with(costume, ".svg")
-      {
-        True -> Svg
-        False -> Png
-      }),
+      Costume(
+        name: name,
+        path: costume,
+        content: content,
+        md5: md5,
+        width: width,
+        height: height,
+        file_type: case string.ends_with(costume, ".svg") {
+          True -> Svg
+          False -> Png
+        },
+      ),
     ]),
   )
 }

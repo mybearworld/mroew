@@ -106,8 +106,8 @@ fn to_target(sprite: Sprite, is_stage: Bool, layer_order: Int) {
             #("dataFormat", json.string(file_type_string)),
             #("assetId", json.string(costume.md5)),
             #("md5ext", json.string(costume.md5 <> "." <> file_type_string)),
-            #("rotationCenterX", json.int(0)),
-            #("rotationCenterY", json.int(0)),
+            #("rotationCenterX", json.int(costume.width / 2)),
+            #("rotationCenterY", json.int(costume.height / 2)),
           ])
         }),
       ),
