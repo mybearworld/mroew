@@ -61,6 +61,10 @@ Coming soon!
    ```ignore
    *.sb3
    ```
+9. If you want to update Mröw, run this:
+   ```sh
+   git submodule update --remote
+   ```
 
 ## To do
 
