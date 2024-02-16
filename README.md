@@ -17,12 +17,12 @@ pub fn main() {
 
 fn stage() {
   sprite.sprite("Stage")
-  |> sprite.costume("Blank", "./assets/blank.svg")
+  |> sprite.costume("Blank", "./assets/blank.svg", 0, 0)
 }
 
 fn sprite1() {
   sprite.sprite("Sprite1")
-  |> sprite.costume("Scratch Cat", "./assets/scratchCat.svg")
+  |> sprite.costume("Scratch Cat", "./assets/scratchCat.svg", 80, 91)
   |> sprite.blocks(
     events.on_flag()
     |> looks.say_timed(OString("Hello, world!"), OInt(2)),
