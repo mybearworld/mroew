@@ -1,7 +1,7 @@
 import gleam/int
 import gleam/float
 import gleam/list
-import gleam/option.{type Option, None, Some}
+import gleam/option.{None, Some}
 import gleam/json.{type Json}
 import mroew/blocks.{
   type Block, type Blocks, type Operator, BTBlock, BTBlocks, OComplex, OFloat,
@@ -159,12 +159,9 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
         [
           block_to_json(
             block: main_block,
-            toplevel: False,
+            state: Substack,
             id_prefix: script_prefix,
             new_subindex: index,
-            isolated_parent: None,
-            substack: True,
-            shadow: False,
           ),
           ..[
             blocks_to_json(
@@ -178,12 +175,12 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
       BTBlock(block) ->
         block_to_json(
           block: block,
-          toplevel: index == 0 && top_level,
+          state: case index == 0 && top_level {
+            True -> TopLevel
+            False -> Block
+          },
           id_prefix: script_prefix,
           new_subindex: index,
-          isolated_parent: None,
-          substack: False,
-          shadow: False,
         )
     })
   }).1
@@ -192,12 +189,9 @@ fn blocks_to_json(blocks: Blocks, script_prefix: String, top_level: Bool) {
 
 fn block_to_json(
   block block: Block,
-  toplevel toplevel: Bool,
   id_prefix id_prefix: String,
   new_subindex new_subindex: Int,
-  isolated_parent isolated_parent: Option(String),
-  substack substack: Bool,
-  shadow shadow: Bool,
+  state state: BlockState,
 ) -> List(#(String, Json)) {
   let block_id = id_prefix <> int.to_string(new_subindex)
 
@@ -207,23 +201,17 @@ fn block_to_json(
         OComplex(complex_block) -> #(
           block_to_json(
             block: complex_block,
-            toplevel: False,
+            state: Operator(block_id),
             id_prefix: block_id <> "o",
             new_subindex: input_index,
-            isolated_parent: Some(block_id),
-            substack: False,
-            shadow: False,
           )
           |> list.append(case input.default {
             Some(OComplex(block)) ->
               block_to_json(
                 block: block,
-                toplevel: True,
+                state: Menu,
                 id_prefix: block_id <> "d",
                 new_subindex: input_index,
-                isolated_parent: None,
-                substack: False,
-                shadow: True,
               )
             _ -> []
           }),
@@ -293,27 +281,27 @@ fn block_to_json(
       block_id,
       json.object(
         [
-          #("parent", case isolated_parent {
-            Some(parent) -> json.string(parent)
-            None -> json.null()
+          #("parent", case state {
+            Operator(parent) -> json.string(parent)
+            _ -> json.null()
           }),
-          #("next", case isolated_parent {
-            Some(_) -> json.null()
-            None -> json.string(id_prefix <> int.to_string(new_subindex + 1))
+          #("next", case state {
+            Operator(_) -> json.null()
+            _ -> json.string(id_prefix <> int.to_string(new_subindex + 1))
           }),
           #("opcode", json.string(block.opcode)),
-          #("topLevel", json.bool(toplevel)),
+          #("topLevel", json.bool(state == TopLevel || state == Menu)),
           #("x", json.int(0)),
           #("y", json.int(0)),
-          #("inputs", case substack {
-            True -> substack_object
-            False -> input_object
+          #("inputs", case state {
+            Substack -> substack_object
+            _ -> input_object
           }),
           #("fields", fields),
         ]
-        |> list.append(case shadow {
-          True -> [#("shadow", json.bool(True))]
-          False -> []
+        |> list.append(case state {
+          Menu -> [#("shadow", json.bool(True))]
+          _ -> []
         }),
       ),
     ),
@@ -323,6 +311,14 @@ fn block_to_json(
       |> list.flatten
     }
   ]
+}
+
+type BlockState {
+  TopLevel
+  Block
+  Menu
+  Substack
+  Operator(parent: String)
 }
 
 fn repr_of_noncomplex_o(operator: Operator) {
