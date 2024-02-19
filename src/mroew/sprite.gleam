@@ -10,6 +10,7 @@ pub type Sprite {
     blocks: List(Blocks),
     costumes: List(Costume),
     sounds: List(Sound),
+    variables: List(String),
   )
 }
 
@@ -48,7 +49,7 @@ pub fn image_type_to_string(image_type: ImageType) {
 }
 
 pub fn sprite(name: String) {
-  Sprite(name: name, blocks: [], costumes: [], sounds: [])
+  Sprite(name: name, blocks: [], costumes: [], sounds: [], variables: [])
 }
 
 pub fn costume(
@@ -92,6 +93,10 @@ pub fn sound(sprite: Sprite, name: String, sound: String) {
       }),
     ]),
   )
+}
+
+pub fn variable(sprite: Sprite, name: String) {
+  Sprite(..sprite, variables: [name, ..sprite.variables])
 }
 
 fn get_content_md5(file_path: String) {

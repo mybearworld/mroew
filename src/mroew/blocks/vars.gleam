@@ -1,6 +1,11 @@
 import gleam/option.{None, Some}
 import mroew/blocks.{
-  type Blocks, type Operator, Block, Field, Input, OComplex, OInt, OString,
+  type Blocks, type Operator, Block, Field, Input, OComplex, OInt, OList,
+  OString, OVar,
+}
+
+pub fn get_var(name: String) {
+  OVar(name)
 }
 
 pub fn set_var(cblocks: Blocks, var: String, value: Operator) {
@@ -33,6 +38,10 @@ pub fn hide_var(cblocks: Blocks, var: String) {
     Field(name: "VARIABLE", value: var, subvalue: None),
   ])
   |> blocks.stack(cblocks)
+}
+
+pub fn get_list(name: String) {
+  OList(name)
 }
 
 pub fn push_list(cblocks: Blocks, list: String, value: Operator) {

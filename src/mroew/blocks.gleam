@@ -26,6 +26,8 @@ pub type Operator {
   OFloat(Float)
   OString(String)
   OMessage(String)
+  OVar(String)
+  OList(String)
   OComplex(Block)
 }
 

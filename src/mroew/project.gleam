@@ -5,7 +5,7 @@ import gleam/option.{None, Some}
 import gleam/json.{type Json}
 import mroew/blocks.{
   type Block, type Blocks, type Operator, BTBlock, BTBlocks, OComplex, OFloat,
-  OInt, OMessage, OString,
+  OInt, OList, OMessage, OString, OVar,
 }
 import mroew/sprite.{type Sprite, Png, Svg}
 
@@ -128,7 +128,18 @@ fn to_target(sprite: Sprite, is_stage: Bool, layer_order: Int) {
         }),
       ),
     ),
-    #("variables", json.object([])),
+    #(
+      "variables",
+      json.object(
+        list.map(sprite.variables, fn(variable) {
+          #(
+            "var:"
+            <> variable,
+            json.preprocessed_array([json.string(variable), json.string("")]),
+          )
+        }),
+      ),
+    ),
     #("isStage", json.bool(is_stage)),
     #(
       "name",
@@ -205,6 +216,27 @@ fn block_to_json(
 
   let inputs =
     list.map_fold(block.inputs, 0, fn(input_index, input) {
+      let default_blocks = case input.default {
+        Some(OComplex(block)) ->
+          block_to_json(
+            block: block,
+            state: Menu,
+            id_prefix: block_id <> "d",
+            new_subindex: input_index,
+          )
+        _ -> []
+      }
+      let default_value = case input.default {
+        Some(OComplex(_)) ->
+          Some(json.string(block_id <> "d" <> int.to_string(input_index)))
+        Some(default) -> Some(repr_of_noncomplex_o(default))
+        None -> None
+      }
+      let is_var_list = case input.value {
+        OVar(_) -> True
+        OList(_) -> True
+        _ -> False
+      }
       #(input_index + 1, case input.value {
         OComplex(complex_block) -> #(
           block_to_json(
@@ -213,28 +245,14 @@ fn block_to_json(
             id_prefix: block_id <> "o",
             new_subindex: input_index,
           )
-          |> list.append(case input.default {
-            Some(OComplex(block)) ->
-              block_to_json(
-                block: block,
-                state: Menu,
-                id_prefix: block_id <> "d",
-                new_subindex: input_index,
-              )
-            _ -> []
-          }),
+          |> list.append(default_blocks),
           #(
             input.name,
-            json.preprocessed_array(case input.default {
-              Some(OComplex(_)) -> [
-                json.int(3),
-                json.string(block_id <> "o" <> int.to_string(input_index)),
-                json.string(block_id <> "d" <> int.to_string(input_index)),
-              ]
+            json.preprocessed_array(case default_value {
               Some(default) -> [
                 json.int(3),
                 json.string(block_id <> "o" <> int.to_string(input_index)),
-                repr_of_noncomplex_o(default),
+                default,
               ]
               None -> [
                 json.int(2),
@@ -243,13 +261,27 @@ fn block_to_json(
             }),
           ),
         )
-        _ -> #([], #(
-          input.name,
-          json.preprocessed_array([
-            json.int(1),
-            repr_of_noncomplex_o(input.value),
-          ]),
-        ))
+        _ ->
+          case is_var_list {
+            True -> #(default_blocks, #(
+              input.name,
+              json.preprocessed_array(case default_value {
+                Some(default) -> [
+                  json.int(3),
+                  repr_of_noncomplex_o(input.value),
+                  default,
+                ]
+                None -> [json.int(2), repr_of_noncomplex_o(input.value)]
+              }),
+            ))
+            False -> #([], #(
+              input.name,
+              json.preprocessed_array([
+                json.int(1),
+                repr_of_noncomplex_o(input.value),
+              ]),
+            ))
+          }
       })
     }).1
 
@@ -340,6 +372,12 @@ fn repr_of_noncomplex_o(operator: Operator) {
     OInt(number) -> [json.int(4), json.string(int.to_string(number))]
     OFloat(number) -> [json.int(4), json.string(float.to_string(number))]
     OMessage(message) -> [json.int(11), json.string(message), json.null()]
+    OVar(name) -> [json.int(12), json.string(name), json.string("var:" <> name)]
+    OList(name) -> [
+      json.int(13),
+      json.string(name),
+      json.string("list:" <> name),
+    ]
     OComplex(_) -> panic as "In repr_of_noncomplex_o, operator is OComplex."
   })
 }
