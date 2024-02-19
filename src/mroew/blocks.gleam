@@ -29,10 +29,6 @@ pub type Operator {
   OComplex(Block)
 }
 
-pub const true = OComplex(Block(opcode: "operator_not", inputs: [], fields: []))
-
-pub const false = OComplex(Block(opcode: "operator_or", inputs: [], fields: []))
-
 pub fn to_complex(operator: Operator) {
   case operator {
     OComplex(_) -> operator

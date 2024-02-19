@@ -233,3 +233,22 @@ fn binary(
   )
   |> OComplex
 }
+
+pub fn int(int: Int) {
+  OInt(int)
+}
+
+pub fn float(float: Float) {
+  OFloat(float)
+}
+
+pub fn string(string: String) {
+  OString(string)
+}
+
+pub fn bool(bool: Bool) {
+  case bool {
+    True -> OComplex(Block(opcode: "operator_not", inputs: [], fields: []))
+    False -> OComplex(Block(opcode: "operator_or", inputs: [], fields: []))
+  }
+}

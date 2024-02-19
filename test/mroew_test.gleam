@@ -1,7 +1,8 @@
-import mroew/blocks.{OInt, OString, c, true}
+import mroew/blocks.{c}
 import mroew/blocks/control
 import mroew/blocks/looks
 import mroew/blocks/events
+import mroew/blocks/ops
 import mroew/project
 import mroew/sprite
 
@@ -25,8 +26,8 @@ fn sprite1() {
     |> c(
       control.forever()
       |> c(
-        control.cond(true)
-        |> looks.say_timed(OString("Hi"), OInt(2)),
+        control.cond(ops.bool(True))
+        |> looks.say_timed(ops.string("Hi"), ops.int(2)),
       ),
     ),
   )
