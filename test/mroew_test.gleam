@@ -24,6 +24,11 @@ fn sprite1() {
   |> sprite.blocks(
     events.on_flag()
     |> vars.set_var("my var", ops.int(1))
-    |> looks.say(vars.get_var("my var")),
+    |> looks.say_timed(vars.get_var("my var"), ops.int(2))
+    |> events.broadcast(ops.string("message1")),
+  )
+  |> sprite.blocks(
+    events.on_message("message1")
+    |> looks.say_timed(ops.string("Recieved message"), ops.int(2)),
   )
 }

@@ -48,7 +48,7 @@ pub fn on_loudness(loudness: Operator) {
 }
 
 pub fn on_message(message: String) {
-  Block(opcode: "event_whengreaterthan", inputs: [], fields: [
+  Block(opcode: "event_whenbroadcastreceived", inputs: [], fields: [
     Field(name: "BROADCAST_OPTION", value: message, subvalue: None),
   ])
   |> blocks.hat

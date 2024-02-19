@@ -371,7 +371,11 @@ fn repr_of_noncomplex_o(operator: Operator) {
     OString(string) -> [json.int(10), json.string(string)]
     OInt(number) -> [json.int(4), json.string(int.to_string(number))]
     OFloat(number) -> [json.int(4), json.string(float.to_string(number))]
-    OMessage(message) -> [json.int(11), json.string(message), json.null()]
+    OMessage(message) -> [
+      json.int(11),
+      json.string(message),
+      json.string("msg:" <> message),
+    ]
     OVar(name) -> [json.int(12), json.string(name), json.string("var:" <> name)]
     OList(name) -> [
       json.int(13),
