@@ -3,9 +3,9 @@
 Write Scratch projects in Gleam.
 
 ```gleam
-import mroew/blocks.{OInt, OString}
 import mroew/blocks/looks
 import mroew/blocks/events
+import mroew/blocks/ops
 import mroew/project
 import mroew/sprite
 
@@ -25,7 +25,7 @@ fn sprite1() {
   |> sprite.costume("Scratch Cat", "./assets/scratchCat.svg", 80, 91)
   |> sprite.blocks(
     events.on_flag()
-    |> looks.say_timed(OString("Hello, world!"), OInt(2)),
+    |> looks.say_timed(ops.string("Hello, world!"), ops.int(2)),
   )
 }
 ```
